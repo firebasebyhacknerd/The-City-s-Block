@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-bg",
+      "description": "Modern city skyline with residential blocks",
+      "imageUrl": "https://images.unsplash.com/photo-1449156001437-3758a27473b3?q=80&w=1600&h=600&auto=format&fit=crop",
+      "imageHint": "city skyline"
+    },
+    {
+      "id": "prop-1",
+      "description": "Modern apartment interior",
+      "imageUrl": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=800&h=600&auto=format&fit=crop",
+      "imageHint": "modern apartment"
+    },
+    {
+      "id": "prop-2",
+      "description": "Luxury suburban house",
+      "imageUrl": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&h=600&auto=format&fit=crop",
+      "imageHint": "luxury house"
+    },
+    {
+      "id": "prop-3",
+      "description": "City penthouse view",
+      "imageUrl": "https://images.unsplash.com/photo-1567496898731-daec1b36bcc0?q=80&w=800&h=600&auto=format&fit=crop",
+      "imageHint": "city penthouse"
+    },
+    {
+      "id": "prop-4",
+      "description": "Cozy studio apartment",
+      "imageUrl": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=800&h=600&auto=format&fit=crop",
+      "imageHint": "studio apartment"
+    },
+    {
+      "id": "prop-5",
+      "description": "Modern kitchen and living area",
+      "imageUrl": "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=800&h=600&auto=format&fit=crop",
+      "imageHint": "modern kitchen"
+    },
+    {
+      "id": "prop-6",
+      "description": "Minimalist bedroom",
+      "imageUrl": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=800&h=600&auto=format&fit=crop",
+      "imageHint": "minimalist bedroom"
+    },
+    {
+      "id": "agent-1",
+      "description": "Professional real estate agent",
+      "imageUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&h=400&auto=format&fit=crop",
+      "imageHint": "professional man"
+    }
+  ]
 }
