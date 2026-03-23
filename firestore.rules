@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * CORE PHILOSOPHY
+     * This ruleset implements a robust, multi-role real estate marketplace model (The City's Blocks). 
+     * It prioritizes authorization independence by relying on denormalized ownership fields (listerId, userId) 
+     * and role-marker collections (/agents/) to avoid expensive cross-document lookups.
+     *
+     * DATA STRUCTURE
+     * - /userProfiles/{userId}: Private profile data, owned by the user.
+     * - /agents/{agentId}: Role markers. Presence of a document grants agent-level privileges (listing properties).
+     * - /properties/{propertyId}: Publicly readable real estate listings. Writes restricted to verified agents.
+     * - /amenities/{amenityId}: Publicly readable reference data for property features.
+     * - /users/{userId}/favoriteListings/{id}: User-specific private subcollection for saved properties.
+     * - /inquiries/{inquiryId}: Lead generation collection. Publicly creatable, but only readable by the property lister.
+     *
+     * KEY SECURITY DECISIONS
+     * - Prototyping Mode: Schema validation is ignored to allow rapid development, while ownership is strictly enforced.
+     * - Agent Authorization: The rules use the 'Existence over Content' principle, checking the /agents/ collection 
+     *   to verify listing permissions.
+     * - Inquiry Privacy: Inquiries contain PII (name, email, phone) and are strictly locked to the 'listerId' 
+     *   denormalized on the inquiry document.
+     */
+
+    // --- Helper Functions ---
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    function isAgent() {
+      return isSignedIn() && exists(/databases/$(database)/documents/agents/$(request.auth.uid));
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Rules for user profile documents. Ensures users can only manage their own profile.
+     * @path /userProfiles/{userId}
+     * @allow Authenticated user where uid matches userId (get, list, create, update, delete).
+     * @deny Any request where auth.uid does not match the document ID.
+     * @principle Restricts access to a user's own data tree and enforces ID consistency.
+     */
+    match /userProfiles/{userId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Role marker collection. Managed by administrators to grant agent status.
+     * @path /agents/{agentId}
+     * @allow Read access for signed-in users to verify agent status; Writes are restricted.
+     * @deny Any write operation from non-admin clients.
+     * @principle Structural segregation of roles for secure privilege escalation.
+     */
+    match /agents/{agentId} {
+      allow get, list: if isSignedIn();
+      allow create, update, delete: if false; // Managed by Admin/Service Account
+    }
+
+    /**
+     * @description Public property listings. Anyone can view; only agents can list and manage their own properties.
+     * @path /properties/{propertyId}
+     * @allow Public (get, list); Agents (create); Owner (update, delete).
+     * @deny Non-agents creating listings; Users updating properties they didn't list.
+     * @principle Public read with owner-only writes using denormalized listerId.
+     */
+    match /properties/{propertyId} {
+      allow get, list: if true;
+      allow create: if isAgent() && request.resource.data.listerId == request.auth.uid;
+      allow update: if isExistingOwner(resource.data.listerId) && request.resource.data.listerId == resource.data.listerId;
+      allow delete: if isExistingOwner(resource.data.listerId);
+    }
+
+    /**
+     * @description Static reference data for amenities (e.g., Gym, Pool).
+     * @path /amenities/{amenityId}
+     * @allow Public (get, list); Writes restricted.
+     * @deny Any write operation from standard users.
+     * @principle Read-only global reference data.
+     */
+    match /amenities/{amenityId} {
+      allow get, list: if true;
+      allow create, update, delete: if false; // Admin only
+    }
+
+    /**
+     * @description User-specific subcollection for favorited property listings.
+     * @path /users/{userId}/favoriteListings/{favoriteListingId}
+     * @allow Authenticated owner of the parent user path (get, list, create, update, delete).
+     * @deny Access to favorite lists belonging to other users.
+     * @principle Path-based authorization for user-scoped subcollections.
+     */
+    match /users/{userId}/favoriteListings/{favoriteListingId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.userId == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Property inquiries. Publicly creatable (leads); privately readable by the intended lister.
+     * @path /inquiries/{inquiryId}
+     * @allow Anyone (create); Lister identified in the document (get, list, update, delete).
+     * @deny Unauthorized users reading sensitive inquiry contact info.
+     * @principle Open creation for lead generation with strictly secured consumer access.
+     */
+    match /inquiries/{inquiryId} {
+      allow create: if true;
+      allow get, list: if isSignedIn() && resource.data.listerId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.listerId == request.auth.uid && request.resource.data.listerId == resource.data.listerId;
+      allow delete: if isSignedIn() && resource.data.listerId == request.auth.uid;
+    }
+  }
+}

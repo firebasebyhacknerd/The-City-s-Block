@@ -1,0 +1,436 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user within The City's Blocks application, including buyers, renters, agents, and property owners. This entity stores basic profile information and indicates user roles.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserProfile entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address, used for communication and as a primary contact point.",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The first name of the user."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The last name of the user."
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "The user's contact phone number."
+        },
+        "registrationDate": {
+          "type": "string",
+          "description": "Timestamp when the user registered their profile.",
+          "format": "date-time"
+        },
+        "isAgent": {
+          "type": "boolean",
+          "description": "Indicates if the user is an agent or property owner capable of listing properties."
+        },
+        "profileImageUrl": {
+          "type": "string",
+          "description": "URL to the user's profile picture.",
+          "format": "uri"
+        },
+        "description": {
+          "type": "string",
+          "description": "A self-provided description or bio for the user, especially relevant for agents/owners."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "firstName",
+        "lastName",
+        "registrationDate",
+        "isAgent"
+      ]
+    },
+    "Property": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Property",
+      "type": "object",
+      "description": "Represents a single real estate property listed for sale or rent on The City's Blocks platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Property entity."
+        },
+        "listerId": {
+          "type": "string",
+          "description": "Reference to the UserProfile of the agent or owner who listed this property. (Relationship: UserProfile 1:N Property)"
+        },
+        "title": {
+          "type": "string",
+          "description": "A concise and engaging title for the property listing."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the property, potentially AI-generated or manually entered."
+        },
+        "propertyType": {
+          "type": "string",
+          "description": "The type of property (e.g., 'Apartment', 'House', 'Villa', 'Land', 'Commercial Space')."
+        },
+        "listingType": {
+          "type": "string",
+          "description": "Indicates if the property is for 'Sale' or 'Rent'."
+        },
+        "price": {
+          "type": "number",
+          "description": "The asking price or rental amount for the property."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency in which the price is quoted (e.g., 'INR', 'USD')."
+        },
+        "area": {
+          "type": "number",
+          "description": "The total area of the property."
+        },
+        "areaUnit": {
+          "type": "string",
+          "description": "The unit of measurement for the property area (e.g., 'Sq. Ft.', 'Sq. M.')."
+        },
+        "bedrooms": {
+          "type": "number",
+          "description": "The number of bedrooms in the property."
+        },
+        "bathrooms": {
+          "type": "number",
+          "description": "The number of bathrooms in the property."
+        },
+        "balconies": {
+          "type": "number",
+          "description": "The number of balconies in the property."
+        },
+        "furnishedStatus": {
+          "type": "string",
+          "description": "Indicates the furnishing status (e.g., 'Furnished', 'Semi-Furnished', 'Unfurnished')."
+        },
+        "addressLine1": {
+          "type": "string",
+          "description": "The first line of the property's street address."
+        },
+        "addressLine2": {
+          "type": "string",
+          "description": "The second line of the property's street address, if applicable."
+        },
+        "city": {
+          "type": "string",
+          "description": "The city where the property is located."
+        },
+        "state": {
+          "type": "string",
+          "description": "The state or province where the property is located."
+        },
+        "country": {
+          "type": "string",
+          "description": "The country where the property is located."
+        },
+        "zipCode": {
+          "type": "string",
+          "description": "The postal or zip code of the property's location."
+        },
+        "latitude": {
+          "type": "number",
+          "description": "The geographical latitude coordinate of the property."
+        },
+        "longitude": {
+          "type": "number",
+          "description": "The geographical longitude coordinate of the property."
+        },
+        "amenityIds": {
+          "type": "array",
+          "description": "References to the Amenities associated with this property. (Relationship: Amenity N:N Property)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "imageUrls": {
+          "type": "array",
+          "description": "An array of URLs pointing to images of the property.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "videoUrl": {
+          "type": "string",
+          "description": "URL to a video tour of the property, if available.",
+          "format": "uri"
+        },
+        "isFeatured": {
+          "type": "boolean",
+          "description": "Flag indicating if the property is marked as a featured listing for promotional purposes."
+        },
+        "listingDate": {
+          "type": "string",
+          "description": "The date and time when the property was first listed.",
+          "format": "date-time"
+        },
+        "lastUpdatedDate": {
+          "type": "string",
+          "description": "The last date and time when the property listing was updated.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the property listing (e.g., 'Active', 'Pending', 'Sold', 'Rented', 'Inactive')."
+        }
+      },
+      "required": [
+        "id",
+        "listerId",
+        "title",
+        "description",
+        "propertyType",
+        "listingType",
+        "price",
+        "currency",
+        "area",
+        "areaUnit",
+        "addressLine1",
+        "city",
+        "state",
+        "country",
+        "zipCode",
+        "latitude",
+        "longitude",
+        "imageUrls",
+        "listingDate",
+        "status"
+      ]
+    },
+    "Amenity": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Amenity",
+      "type": "object",
+      "description": "Represents a specific facility or feature available with a property (e.g., swimming pool, parking).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Amenity entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the amenity (e.g., 'Swimming Pool', 'Gym', 'Parking')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the amenity."
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "FavoriteListing": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "FavoriteListing",
+      "type": "object",
+      "description": "Represents a property that a user has marked as a favorite for quick access and comparison.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the FavoriteListing entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the UserProfile who favorited the property. (Relationship: UserProfile 1:N FavoriteListing)"
+        },
+        "propertyId": {
+          "type": "string",
+          "description": "Reference to the Property that has been favorited. (Relationship: Property 1:N FavoriteListing)"
+        },
+        "favoritedDate": {
+          "type": "string",
+          "description": "The date and time when the property was added to favorites.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "propertyId",
+        "favoritedDate"
+      ]
+    },
+    "Inquiry": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Inquiry",
+      "type": "object",
+      "description": "Represents an inquiry sent by a potential buyer/renter to a property agent/owner regarding a specific property.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Inquiry entity."
+        },
+        "propertyId": {
+          "type": "string",
+          "description": "Reference to the Property for which the inquiry was made. (Relationship: Property 1:N Inquiry)"
+        },
+        "inquirerName": {
+          "type": "string",
+          "description": "The full name of the person making the inquiry."
+        },
+        "inquirerEmail": {
+          "type": "string",
+          "description": "The email address of the person making the inquiry.",
+          "format": "email"
+        },
+        "inquirerPhoneNumber": {
+          "type": "string",
+          "description": "The phone number of the person making the inquiry."
+        },
+        "message": {
+          "type": "string",
+          "description": "The detailed message or question from the inquirer."
+        },
+        "inquiryDate": {
+          "type": "string",
+          "description": "The date and time when the inquiry was submitted.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the inquiry (e.g., 'New', 'Contacted', 'Resolved', 'Archived')."
+        },
+        "listerId": {
+          "type": "string",
+          "description": "Reference to the UserProfile of the property lister, allowing direct routing of inquiries. (Relationship: UserProfile 1:N Inquiry)"
+        }
+      },
+      "required": [
+        "id",
+        "propertyId",
+        "inquirerName",
+        "inquirerEmail",
+        "message",
+        "inquiryDate",
+        "status",
+        "listerId"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/userProfiles/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profile information, private to the user. The 'id' field matches the `request.auth.uid`. The 'isAgent' field is for informational/display purposes and not used for authorization in security rules to maintain authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user, matching `request.auth.uid`."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/agents/{agentId}",
+        "definition": {
+          "entityName": "AgentRole",
+          "schema": {
+            "$ref": "#/backend/entities/AgentRole"
+          },
+          "description": "Dedicated collection for agent role authorization. The existence of a document at this path signifies that the user is an agent. This is used in security rules with `exists()` for authorization independence. 'id' field corresponds to the user's UID. This collection is managed by administrators.",
+          "params": [
+            {
+              "name": "agentId",
+              "description": "The unique ID of the user who is an agent, matching `request.auth.uid`."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/properties/{propertyId}",
+        "definition": {
+          "entityName": "Property",
+          "schema": {
+            "$ref": "#/backend/entities/Property"
+          },
+          "description": "Stores all property listings. This is a publicly readable collection. It includes the denormalized 'listerId' for direct ownership checks in security rules, enabling authorization independence for write operations.",
+          "params": [
+            {
+              "name": "propertyId",
+              "description": "The unique ID of the property listing."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/amenities/{amenityId}",
+        "definition": {
+          "entityName": "Amenity",
+          "schema": {
+            "$ref": "#/backend/entities/Amenity"
+          },
+          "description": "Stores static reference data for available amenities. This collection is publicly readable by all users and managed by administrators.",
+          "params": [
+            {
+              "name": "amenityId",
+              "description": "The unique ID of the amenity."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/favoriteListings/{favoriteListingId}",
+        "definition": {
+          "entityName": "FavoriteListing",
+          "schema": {
+            "$ref": "#/backend/entities/FavoriteListing"
+          },
+          "description": "Stores properties marked as favorites by a user. This is a user-specific subcollection, with 'userId' in the path matching `request.auth.uid`. The 'userId' is also denormalized in the document for robust authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who favorited the listing."
+            },
+            {
+              "name": "favoriteListingId",
+              "description": "The unique ID of the favorite listing entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/inquiries/{inquiryId}",
+        "definition": {
+          "entityName": "Inquiry",
+          "schema": {
+            "$ref": "#/backend/entities/Inquiry"
+          },
+          "description": "Stores inquiries submitted by potential buyers/renters. Any user (authenticated or anonymous) can create an inquiry. The 'listerId' is denormalized within the document, ensuring that only the respective property lister can read or manage their received inquiries, providing authorization independence.",
+          "params": [
+            {
+              "name": "inquiryId",
+              "description": "The unique ID of the inquiry."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure for 'The City's Blocks' is designed to prioritize secure, scalable, and debuggable authorization rules in alignment with the core design principles. \n\n**Authorization Independence via Denormalization:**\n*   For `Property` documents in `/properties/{propertyId}`, the `listerId` is included directly within each property document. This enables direct ownership checks (e.g., `request.auth.uid == resource.data.listerId`) without requiring `get()` calls to a parent `UserProfile` document. This allows for atomic updates and simplified rules.\n*   Similarly, for `FavoriteListing` documents in `/users/{userId}/favoriteListings/{favoriteListingId}`, the `userId` is present in both the path parameter (`{userId}`) and denormalized within the document (`resource.data.userId`). This ensures that a user can only interact with their own favorite listings without cross-document lookups.\n*   In `Inquiry` documents in `/inquiries/{inquiryId}`, the `listerId` (of the property owner/agent) is denormalized within the document. This allows the lister to securely read and manage inquiries pertinent to them using direct field checks.\n*   For agent role authorization, an explicit `/agents/{agentId}` collection is introduced. The existence of a document at `/agents/$(request.auth.uid)` directly grants the 'agent' role, eliminating the need for `get()` calls to retrieve a boolean flag from a user profile.\n\n**QAP Compliance (Rules are not Filters):**\n*   **Publicly accessible data:** Collections like `/properties` and `/amenities` are designed for public read and list operations. Security rules for these collections will simply `allow read, list: true;`. Client-side applications will then apply filtering for search results, ensuring that rules do not act as filters, thus being QAP compliant.\n*   **User-specific lists:** The `/users/{userId}/favoriteListings` subcollection ensures that `list` operations are inherently secure. A user can only list their own favorites because the access path itself (`/users/$(request.auth.uid)/favoriteListings`) enforces `request.auth.uid` matches `{userId}`. This makes `list` operations secure and efficient.\n*   **Lister-specific inquiries:** For inquiries, listers can query the `/inquiries` collection using a `where('listerId', '==', request.auth.uid)` clause. This query is performant and secure, as the rules will enforce that `request.auth.uid` matches the `listerId` for read access, thereby making it QAP compliant for lister-specific lists.\n\n**Structural Segregation & Access Modeling:**\n*   `UserProfile` data is kept private in `/userProfiles/{userId}`. The `isAgent` field within `UserProfile` is kept purely for display/frontend logic and is not used for authorization in rules to prevent `get()` dependencies. \n*   The `/agents/{agentId}` collection explicitly segregates agent roles, adhering to the 'Existence over Content' principle for DBAC and enabling straightforward authorization checks for property creation.\n*   The structure consistently uses hierarchical paths for user-owned data (e.g., `/users/{userId}/favoriteListings`), ensuring clear ownership and simple security rules. Global, publicly accessible reference data (`/amenities`) is stored at the top level with open read access.\n\nThis design ensures that security rules are minimal, highly readable, and performant, avoiding complex authorization logic that relies on slow `get()` operations, thereby creating a robust and scalable Firestore structure."
+  }
+}
