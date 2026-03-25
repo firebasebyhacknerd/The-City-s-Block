@@ -1,46 +1,112 @@
+"use client";
 
-"use client"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  BadgeIndianRupee,
+  Building2,
+  LayoutDashboard,
+  LogIn,
+  MapPinned,
+  Shield,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-import Link from 'next/link'
-import { Search, Heart, User, PlusCircle, Building2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+const primaryNav = [
+  { href: "/search?listingType=sale", label: "Buy" },
+  { href: "/search?listingType=rent", label: "Rent" },
+  { href: "/commercial", label: "Commercial" },
+  { href: "/projects", label: "New Projects" },
+  { href: "/search?featured=true", label: "Top Picks" },
+];
 
 export default function Navbar() {
+  const pathname = usePathname();
+
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <Building2 className="h-8 w-8 text-primary" />
-          <span className="font-headline font-bold text-xl tracking-tight text-primary">
-            The City's <span className="text-secondary">Blocks</span>
-          </span>
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="rounded-2xl bg-slate-950 p-2 text-amber-300 shadow-sm">
+            <Building2 className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="font-headline text-lg font-semibold tracking-tight text-slate-950">
+              The City's Block
+            </div>
+            <div className="text-xs uppercase tracking-[0.2em] text-slate-400">
+              India Property Portal
+            </div>
+          </div>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/search" className="text-sm font-medium hover:text-primary transition-colors">Buy</Link>
-          <Link href="/search" className="text-sm font-medium hover:text-primary transition-colors">Rent</Link>
-          <Link href="/search" className="text-sm font-medium hover:text-primary transition-colors">New Projects</Link>
-        </div>
+        <nav className="hidden items-center gap-1 lg:flex">
+          {primaryNav.map((item) => {
+            const active = pathname === item.href.split("?")[0];
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "rounded-full px-4 py-2 text-sm font-medium transition",
+                  active
+                    ? "bg-slate-950 text-white"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/favorites">
-              <Heart className="h-5 w-5" />
+          <Button
+            asChild
+            variant="ghost"
+            className="hidden rounded-full px-4 text-slate-600 md:inline-flex"
+          >
+            <Link href="/locality/Gurugram/golf-course-road">
+              <MapPinned className="h-4 w-4" />
+              Localities
             </Link>
           </Button>
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/profile">
-              <User className="h-5 w-5" />
+          <Button
+            asChild
+            variant="ghost"
+            className="hidden rounded-full px-4 text-slate-600 xl:inline-flex"
+          >
+            <Link href="/admin">
+              <Shield className="h-4 w-4" />
+              Admin
             </Link>
           </Button>
-          <Button className="hidden sm:flex gap-2" asChild>
-            <Link href="/list-property">
-              <PlusCircle className="h-4 w-4" />
+          <Button
+            asChild
+            variant="outline"
+            className="hidden rounded-full border-slate-200 px-4 md:inline-flex"
+          >
+            <Link href="/dashboard">
+              <LayoutDashboard className="h-4 w-4" />
+              Dashboard
+            </Link>
+          </Button>
+          <Button asChild className="rounded-full bg-slate-950 text-white hover:bg-slate-800">
+            <Link href="/login">
+              <LogIn className="h-4 w-4" />
+              Sign in
+            </Link>
+          </Button>
+          <Button asChild className="hidden rounded-full bg-amber-400 text-slate-950 hover:bg-amber-300 sm:inline-flex">
+            <Link href="/dashboard/new-listing">
+              <BadgeIndianRupee className="h-4 w-4" />
               Post Property
             </Link>
           </Button>
         </div>
       </div>
-    </nav>
-  )
+    </header>
+  );
 }

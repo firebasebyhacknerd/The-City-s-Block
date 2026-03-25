@@ -31,8 +31,8 @@ export default function AIDescriptionTool({ formData, onApply }: AIDescriptionTo
   const handleGenerate = async () => {
     if (!formData.propertyType || !formData.location || !formData.price) {
       toast({
-        title: "Missing Information",
-        description: "Please fill out type, location, and price first.",
+        title: "A few essentials are missing",
+        description: "Add the property type, location, and pricing first so the draft feels market-ready.",
         variant: "destructive"
       })
       return
@@ -53,8 +53,8 @@ export default function AIDescriptionTool({ formData, onApply }: AIDescriptionTo
       setDescription(result.description)
     } catch (error) {
       toast({
-        title: "Generation Failed",
-        description: "Something went wrong while generating the description.",
+        title: "Draft generation failed",
+        description: "We could not prepare the listing copy this time. Try again after refining the details.",
         variant: "destructive"
       })
     } finally {
@@ -64,7 +64,7 @@ export default function AIDescriptionTool({ formData, onApply }: AIDescriptionTo
 
   const handleCopy = () => {
     navigator.clipboard.writeText(description)
-    toast({ title: "Copied to clipboard" })
+    toast({ title: "Listing copy copied" })
   }
 
   return (
@@ -72,10 +72,10 @@ export default function AIDescriptionTool({ formData, onApply }: AIDescriptionTo
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-secondary">
           <Sparkles className="h-5 w-5" />
-          AI Description Writer
+          AI Listing Copy Assistant
         </CardTitle>
         <CardDescription>
-          Generate a professional listing description based on your property details.
+          Turn raw property details into polished, buyer-facing copy that sounds confident and credible.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -102,13 +102,13 @@ export default function AIDescriptionTool({ formData, onApply }: AIDescriptionTo
                 className="flex-1"
                 onClick={() => setDescription('')}
               >
-                Clear
+                Start Over
               </Button>
               <Button
                 className="flex-1 bg-secondary text-white"
                 onClick={() => onApply(description)}
               >
-                Apply Description
+                Use This Copy
               </Button>
             </div>
           </div>
@@ -121,12 +121,12 @@ export default function AIDescriptionTool({ formData, onApply }: AIDescriptionTo
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Generating...
+                Writing Copy...
               </>
             ) : (
               <>
                 <Sparkles className="mr-2 h-4 w-4" />
-                Generate Engaging Description
+                Draft Listing Description
               </>
             )}
           </Button>

@@ -1,230 +1,208 @@
+import Link from "next/link";
+import { ArrowRight, Building2, Landmark, Search, ShieldCheck, Sparkles } from "lucide-react";
+import { ListingCard } from "@/components/portal/ListingCard";
+import { LocalityCard } from "@/components/portal/LocalityCard";
+import { MetricCard } from "@/components/portal/MetricCard";
+import { PageIntro } from "@/components/portal/PageIntro";
+import { ProjectCard } from "@/components/portal/ProjectCard";
+import { Button } from "@/components/ui/button";
+import {
+  formatInr,
+  getCommercialListings,
+  getFeaturedListings,
+  getPortalMetrics,
+  localities,
+  projects,
+} from "@/lib/portal";
 
-"use client"
+export const metadata = {
+  title: "The City's Block | Buy, Rent, and Discover Property Across India",
+  description:
+    "Find verified homes, high-potential localities, and new projects across India with expert-backed guidance and sharper property discovery.",
+};
 
-import { useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import Navbar from '@/components/layout/Navbar'
-import PropertyCard from '@/components/property/PropertyCard'
-import { PROPERTIES } from '@/app/lib/mock-data'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Search, MapPin, Building, DollarSign } from 'lucide-react'
-
-export default function Home() {
-  const [searchQuery, setSearchQuery] = useState('')
+export default function HomePage() {
+  const metrics = getPortalMetrics();
+  const featuredListings = getFeaturedListings();
+  const commercialListings = getCommercialListings().slice(0, 2);
 
   return (
-    <div className="min-h-screen flex flex-col font-body bg-background">
-      <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1449156001437-3758a27473b3?q=80&w=1600&h=800&auto=format&fit=crop"
-          alt="Hero Background"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-primary/40 backdrop-blur-[2px]" />
-        
-        <div className="relative container mx-auto px-4 text-center z-10">
-          <h1 className="text-4xl md:text-6xl font-headline font-bold text-white mb-6 drop-shadow-lg">
-            Find Your Perfect Block
-          </h1>
-          <p className="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto drop-shadow-md">
-            Whether you're looking for a cozy studio or a luxury penthouse, discover properties in the city's most vibrant neighborhoods.
-          </p>
-          
-          <div className="bg-white p-2 rounded-xl shadow-2xl max-w-4xl mx-auto flex flex-col md:flex-row gap-2">
-            <div className="flex-1 relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/60 h-5 w-5" />
-              <Input 
-                placeholder="Where would you like to live?" 
-                className="pl-10 h-14 border-none text-base focus-visible:ring-0"
-              />
+    <main>
+      <section className="container-shell py-10 md:py-16">
+        <div className="overflow-hidden rounded-[36px] border border-slate-200 bg-slate-950 px-6 py-10 text-white shadow-2xl md:px-10 md:py-14">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200">
+                <Sparkles className="h-4 w-4 text-amber-300" />
+                Verified homes. Smarter locality insight. Better decisions.
+              </div>
+              <div className="space-y-4">
+                <h1 className="max-w-3xl font-headline text-5xl font-semibold tracking-tight md:text-6xl">
+                  Find the right property in India without second-guessing every step.
+                </h1>
+                <p className="max-w-2xl text-lg leading-8 text-slate-300">
+                  Search homes, rentals, new launches, and commercial spaces with clearer filters, stronger locality context, and trusted experts who help you move faster.
+                </p>
+              </div>
+              <form action="/search" className="grid gap-3 rounded-[28px] border border-white/10 bg-white/5 p-4 md:grid-cols-[1.1fr_1fr_1fr_auto]">
+                <label className="space-y-2">
+                  <span className="text-xs uppercase tracking-[0.2em] text-slate-400">City / locality</span>
+                  <input
+                    name="q"
+                    placeholder="Search by city, locality, landmark, or project"
+                    className="h-12 w-full rounded-2xl border border-white/10 bg-white/10 px-4 text-sm text-white placeholder:text-slate-400 focus:outline-none"
+                  />
+                </label>
+                <label className="space-y-2">
+                  <span className="text-xs uppercase tracking-[0.2em] text-slate-400">Intent</span>
+                  <select
+                    name="listingType"
+                    className="h-12 w-full rounded-2xl border border-white/10 bg-white/10 px-4 text-sm text-white focus:outline-none"
+                    defaultValue="sale"
+                  >
+                    <option value="sale">Buy</option>
+                    <option value="rent">Rent</option>
+                  </select>
+                </label>
+                <label className="space-y-2">
+                  <span className="text-xs uppercase tracking-[0.2em] text-slate-400">Asset class</span>
+                  <select
+                    name="assetClass"
+                    className="h-12 w-full rounded-2xl border border-white/10 bg-white/10 px-4 text-sm text-white focus:outline-none"
+                    defaultValue="residential"
+                  >
+                    <option value="residential">Residential</option>
+                    <option value="commercial">Commercial</option>
+                  </select>
+                </label>
+                <Button className="mt-6 h-12 rounded-2xl bg-amber-400 px-6 text-slate-950 hover:bg-amber-300 md:mt-auto">
+                  <Search className="h-4 w-4" />
+                  Explore Now
+                </Button>
+              </form>
             </div>
-            <div className="hidden md:flex h-10 w-px bg-muted self-center" />
-            <div className="flex-1 relative">
-              <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/60 h-5 w-5" />
-              <Input 
-                placeholder="Property Type" 
-                className="pl-10 h-14 border-none text-base focus-visible:ring-0"
-              />
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <MetricCard label="Active listings" value={`${metrics.activeListings}+`} tone="dark" />
+              <MetricCard label="Verified experts" value={`${metrics.verifiedExperts}`} tone="dark" />
+              <MetricCard label="Projects to evaluate" value={`${metrics.projects}`} tone="dark" />
+              <MetricCard label="Cities in focus" value={`${metrics.cities}`} tone="dark" />
+              <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 sm:col-span-2">
+                <div className="flex items-center gap-3 text-amber-300">
+                  <ShieldCheck className="h-5 w-5" />
+                  <span className="text-sm font-medium">Why serious seekers start here</span>
+                </div>
+                <div className="mt-3 grid gap-2 text-sm text-slate-300">
+                  <div>Shortlist homes with stronger confidence using verified inventory signals.</div>
+                  <div>Compare localities with market context, not just glossy photos.</div>
+                  <div>Connect with responsive experts when you are ready to inspect or negotiate.</div>
+                  <div>Move from browsing to action with clearer search paths across every category.</div>
+                </div>
+              </div>
             </div>
-            <Button size="lg" className="h-14 px-8 bg-secondary hover:bg-secondary/90 text-white font-bold text-lg rounded-lg">
-              <Search className="mr-2 h-5 w-5" />
-              Search
-            </Button>
           </div>
         </div>
       </section>
 
-      {/* Featured Properties */}
-      <section className="py-20 container mx-auto px-4">
-        <div className="flex items-end justify-between mb-10">
-          <div>
-            <h2 className="text-3xl font-headline font-bold text-primary">Featured Blocks</h2>
-            <p className="text-muted-foreground mt-2">Handpicked premium properties just for you.</p>
-          </div>
-          <Button variant="link" className="text-primary font-bold" asChild>
-            <Link href="/search">View All Properties</Link>
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {PROPERTIES.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+      <section className="container-shell py-10">
+        <PageIntro
+          eyebrow="Featured inventory"
+          title="Homes and spaces worth your attention first"
+          description="Each featured listing is positioned to help buyers and renters understand the location, the value, and the next step without wading through noise."
+        />
+        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {featuredListings.map((listing) => (
+            <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="bg-primary py-16 text-white">
-        <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <div className="text-4xl font-bold text-secondary mb-2">10k+</div>
-            <div className="text-sm uppercase tracking-wider text-white/70">Listings</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold text-secondary mb-2">5k+</div>
-            <div className="text-sm uppercase tracking-wider text-white/70">Happy Clients</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold text-secondary mb-2">200+</div>
-            <div className="text-sm uppercase tracking-wider text-white/70">City Blocks</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold text-secondary mb-2">500+</div>
-            <div className="text-sm uppercase tracking-wider text-white/70">Expert Agents</div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-headline font-bold text-center text-primary mb-16">The Blocks Difference</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-secondary/10 text-secondary rounded-2xl flex items-center justify-center mx-auto">
-                <Search className="h-8 w-8" />
+      <section className="container-shell py-10">
+        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+            <PageIntro
+              eyebrow="Commercial"
+              title="Commercial property with sharper decision signals"
+              description="Evaluate offices, retail, and income assets with clearer positioning, stronger market context, and direct access to the people behind the listing."
+            />
+            <div className="mt-6 space-y-4 text-sm leading-7 text-slate-600">
+              <div className="flex items-start gap-3">
+                <Landmark className="mt-1 h-4 w-4 text-amber-500" />
+                Explore Grade A offices, high-street retail, and strategic warehouse opportunities.
               </div>
-              <h3 className="text-xl font-bold">Smart Filtering</h3>
-              <p className="text-muted-foreground">Find exactly what you need with our advanced search tools and precise block-based navigation.</p>
-            </div>
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto">
-                <Sparkles className="h-8 w-8" />
+              <div className="flex items-start gap-3">
+                <Building2 className="mt-1 h-4 w-4 text-amber-500" />
+                Move from broad search to meaningful conversations with owners, builders, and advisors.
               </div>
-              <h3 className="text-xl font-bold">AI Listings</h3>
-              <p className="text-muted-foreground">Get professional descriptions instantly with our built-in AI writing assistant for every property.</p>
             </div>
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-secondary/10 text-secondary rounded-2xl flex items-center justify-center mx-auto">
-                <DollarSign className="h-8 w-8" />
-              </div>
-              <h3 className="text-xl font-bold">Verified Pricing</h3>
-              <p className="text-muted-foreground">We ensure all our listings feature competitive, verified market pricing to save you time and money.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-primary py-12 text-white/80 border-t border-white/10">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div className="space-y-4">
-              <Link href="/" className="flex items-center gap-2">
-                <Building2 className="h-8 w-8 text-secondary" />
-                <span className="font-headline font-bold text-xl tracking-tight text-white">
-                  The City's <span className="text-secondary">Blocks</span>
-                </span>
+            <Button asChild className="mt-8 rounded-full bg-slate-950 text-white hover:bg-slate-800">
+              <Link href="/commercial">
+                View commercial opportunities
+                <ArrowRight className="h-4 w-4" />
               </Link>
-              <p className="text-sm">Building a better way to find your next urban sanctuary. Trusted by thousands across the city.</p>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="/search" className="hover:text-secondary">Buy Properties</Link></li>
-                <li><Link href="/search" className="hover:text-secondary">Rent Properties</Link></li>
-                <li><Link href="/list-property" className="hover:text-secondary">Sell Your Block</Link></li>
-                <li><Link href="/profile" className="hover:text-secondary">Your Account</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-4">Support</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link href="#" className="hover:text-secondary">Help Center</Link></li>
-                <li><Link href="#" className="hover:text-secondary">Terms of Service</Link></li>
-                <li><Link href="#" className="hover:text-secondary">Privacy Policy</Link></li>
-                <li><Link href="#" className="hover:text-secondary">Contact Us</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-4">Newsletter</h4>
-              <p className="text-sm mb-4">Stay updated with the latest city block arrivals.</p>
-              <div className="flex gap-2">
-                <Input placeholder="Email" className="bg-white/10 border-white/20 text-white placeholder:text-white/40" />
-                <Button className="bg-secondary hover:bg-secondary/90 text-white">Join</Button>
-              </div>
-            </div>
+            </Button>
           </div>
-          <div className="pt-8 border-t border-white/10 text-center text-xs">
-            © {new Date().getFullYear()} The City's Blocks. All rights reserved.
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {commercialListings.map((listing) => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))}
           </div>
         </div>
-      </footer>
-    </div>
-  )
-}
+      </section>
 
-function Building2(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
-      <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
-      <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
-      <path d="M10 6h4" />
-      <path d="M10 10h4" />
-      <path d="M10 14h4" />
-      <path d="M10 18h4" />
-    </svg>
-  )
-}
+      <section className="container-shell py-10">
+        <div className="flex items-end justify-between gap-4">
+          <PageIntro
+            eyebrow="New projects"
+            title="New launches for buyers who want an early advantage"
+            description="Review launch-stage and ready projects with pricing bands, possession clarity, builder context, and stronger brochure-led action."
+          />
+          <Button asChild variant="outline" className="rounded-full border-slate-200">
+            <Link href="/projects">Browse all projects</Link>
+          </Button>
+        </div>
+        <div className="mt-8 grid gap-6 lg:grid-cols-3">
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
+      </section>
 
-function Sparkles(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
-      <path d="M5 3v4" />
-      <path d="M19 17v4" />
-      <path d="M3 5h4" />
-      <path d="M17 19h4" />
-    </svg>
-  )
+      <section className="container-shell py-10">
+        <div className="flex items-end justify-between gap-4">
+          <PageIntro
+            eyebrow="Locality intelligence"
+            title="Locality pages that explain why an area matters"
+            description="Go beyond inventory counts with market cues, surrounding landmarks, and neighborhood context that helps narrow your shortlist with conviction."
+          />
+        </div>
+        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {localities.map((locality) => (
+            <LocalityCard key={locality.id} locality={locality} />
+          ))}
+        </div>
+      </section>
+
+      <section className="container-shell py-10 pb-16">
+        <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm md:p-10">
+          <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr]">
+            <div>
+              <PageIntro
+                eyebrow="Why buyers stay"
+                title="A more confident way to search"
+                description="From first search to final inquiry, every part of the experience is designed to reduce friction, strengthen trust, and make the next move feel obvious."
+              />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <MetricCard label="Project pricing range" value={`${formatInr(9200000, true)} - ${formatInr(145000000, true)}`} />
+              <MetricCard label="Ways to connect" value="Call, inquiry, WhatsApp" />
+              <MetricCard label="Expert coverage" value="Buy, rent, projects, commercial" />
+              <MetricCard label="Decision support" value="Locality insight + verified experts" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }

@@ -1,11 +1,25 @@
+import type { Metadata } from "next";
+import { Fraunces, Manrope } from "next/font/google";
+import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
+import Navbar from "@/components/layout/Navbar";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 
-import type {Metadata} from 'next';
-import './globals.css';
-import { Toaster } from "@/components/ui/toaster"
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-body",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-headline",
+});
 
 export const metadata: Metadata = {
-  title: "The City's Blocks | Premium Real Estate Marketplace",
-  description: 'Find your perfect block in the heart of the city.',
+  metadataBase: new URL("https://the-citys-block.vercel.app"),
+  title: "The City's Block | India Property Portal",
+  description:
+    "Discover residential and commercial listings, projects, localities, and verified agents across India's top property markets.",
 };
 
 export default function RootLayout({
@@ -15,14 +29,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-      </head>
-      <body className="font-body antialiased">
-        {children}
-        <Toaster />
+      <body className={`${manrope.variable} ${fraunces.variable} bg-background font-body text-foreground antialiased`}>
+        <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(251,191,36,0.08),transparent_26%),linear-gradient(180deg,#fffdfa_0%,#f8fafc_55%,#ffffff_100%)]">
+          <Navbar />
+          {children}
+          <SiteFooter />
+          <Toaster />
+        </div>
       </body>
     </html>
   );
