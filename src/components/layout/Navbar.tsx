@@ -100,9 +100,9 @@ export default function Navbar() {
             </Link>
           </Button>
           <Button asChild className="hidden rounded-full bg-amber-400 text-slate-950 hover:bg-amber-300 sm:inline-flex">
-            <Link href="/dashboard/new-listing">
+            <Link href="/post-property">
               <BadgeIndianRupee className="h-4 w-4" />
-              Post Property
+              Post Property <span className="ml-1 rounded bg-white px-1.5 py-0.5 text-[10px] font-bold text-amber-600">FREE</span>
             </Link>
           </Button>
         </div>
