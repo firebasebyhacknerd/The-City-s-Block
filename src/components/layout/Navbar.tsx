@@ -1,28 +1,18 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import {
-  BadgeIndianRupee,
-  Building2,
-  LayoutDashboard,
-  LogIn,
-  MapPinned,
-  Shield,
-} from "lucide-react";
+import { Building2, LayoutDashboard, LogIn, Shield, PlusCircle, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { getSession } from "@/lib/auth";
+import { signOutAction } from "@/app/actions/auth";
 
 const primaryNav = [
-  { href: "/search?listingType=sale", label: "Buy" },
-  { href: "/search?listingType=rent", label: "Rent" },
-  { href: "/commercial", label: "Commercial" },
+  { href: "/search?listing_type=sale", label: "Buy" },
+  { href: "/search?listing_type=rent", label: "Rent" },
+  { href: "/search?asset_class=commercial", label: "Commercial" },
   { href: "/projects", label: "New Projects" },
-  { href: "/search?featured=true", label: "Top Picks" },
 ];
 
-export default function Navbar() {
-  const pathname = usePathname();
+export default async function Navbar() {
+  const session = await getSession();
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
@@ -42,69 +32,56 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {primaryNav.map((item) => {
-            const active = pathname === item.href.split("?")[0];
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "rounded-full px-4 py-2 text-sm font-medium transition",
-                  active
-                    ? "bg-slate-950 text-white"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          {primaryNav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-950 transition"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button
-            asChild
-            variant="ghost"
-            className="hidden rounded-full px-4 text-slate-600 md:inline-flex"
-          >
-            <Link href="/locality/Gurugram/golf-course-road">
-              <MapPinned className="h-4 w-4" />
-              Localities
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="ghost"
-            className="hidden rounded-full px-4 text-slate-600 xl:inline-flex"
-          >
-            <Link href="/admin">
-              <Shield className="h-4 w-4" />
-              Admin
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            className="hidden rounded-full border-slate-200 px-4 md:inline-flex"
-          >
-            <Link href="/dashboard">
-              <LayoutDashboard className="h-4 w-4" />
-              Dashboard
-            </Link>
-          </Button>
-          <Button asChild className="rounded-full bg-slate-950 text-white hover:bg-slate-800">
-            <Link href="/login">
-              <LogIn className="h-4 w-4" />
-              Sign in
-            </Link>
-          </Button>
-          <Button asChild className="hidden rounded-full bg-amber-400 text-slate-950 hover:bg-amber-300 sm:inline-flex">
-            <Link href="/post-property">
-              <BadgeIndianRupee className="h-4 w-4" />
-              Post Property <span className="ml-1 rounded bg-white px-1.5 py-0.5 text-[10px] font-bold text-amber-600">FREE</span>
-            </Link>
-          </Button>
+          {session ? (
+            <>
+              {session.role === "admin" && (
+                <Button asChild variant="outline" className="hidden rounded-full border-slate-200 md:inline-flex gap-1.5">
+                  <Link href="/admin"><Shield className="h-4 w-4" /> Admin</Link>
+                </Button>
+              )}
+              {(session.role === "owner" || session.role === "agent") && (
+                <>
+                  <Button asChild className="hidden rounded-full bg-amber-400 text-slate-950 hover:bg-amber-300 sm:inline-flex gap-1.5">
+                    <Link href="/dashboard/new-listing"><PlusCircle className="h-4 w-4" /> Post FREE</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="hidden rounded-full border-slate-200 md:inline-flex gap-1.5">
+                    <Link href="/dashboard"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link>
+                  </Button>
+                </>
+              )}
+              <div className="flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5">
+                <User className="h-4 w-4 text-slate-500" />
+                <span className="text-sm text-slate-700 hidden md:block">{session.name.split(" ")[0]}</span>
+              </div>
+              <form action={signOutAction}>
+                <Button variant="ghost" size="sm" className="rounded-full gap-1.5 text-slate-600">
+                  <LogOut className="h-4 w-4" />
+                  <span className="hidden md:block">Sign out</span>
+                </Button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Button asChild className="hidden rounded-full bg-amber-400 text-slate-950 hover:bg-amber-300 sm:inline-flex gap-1.5">
+                <Link href="/signup"><PlusCircle className="h-4 w-4" /> Post FREE</Link>
+              </Button>
+              <Button asChild className="rounded-full bg-slate-950 text-white hover:bg-slate-800 gap-1.5">
+                <Link href="/login"><LogIn className="h-4 w-4" /> Sign in</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>

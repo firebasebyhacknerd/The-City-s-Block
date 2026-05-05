@@ -1,5 +1,10 @@
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
+import sql from "@/lib/db";
 import { PanelShell } from "@/components/portal/PanelShell";
-import { profiles } from "@/lib/portal";
+import { ProfileEditForm } from "@/components/dashboard/ProfileEditForm";
+import { PasswordChangeForm } from "@/components/dashboard/PasswordChangeForm";
+import { Badge } from "@/components/ui/badge";
 
 const dashboardNav = [
   { label: "Overview", href: "/dashboard" },
@@ -10,8 +15,14 @@ const dashboardNav = [
   { label: "New listing", href: "/dashboard/new-listing" },
 ];
 
-export default function DashboardProfilePage() {
-  const profile = profiles[0];
+export default async function DashboardProfilePage() {
+  const session = await getSession();
+  if (!session) redirect("/login");
+
+  const rows = await sql`SELECT * FROM users WHERE id = ${session.id} LIMIT 1`;
+  const user = rows[0];
+
+  if (!user) redirect("/login");
 
   return (
     <main className="container-shell py-10 pb-16">
@@ -21,15 +32,57 @@ export default function DashboardProfilePage() {
         items={dashboardNav}
         activeHref="/dashboard/profile"
       >
-        <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="text-xl font-semibold text-slate-950">Profile trust and account identity</div>
-          <div className="mt-5 grid gap-4 text-sm text-slate-600 md:grid-cols-2">
-            <div>Name: {profile.name}</div>
-            <div>Email: {profile.email}</div>
-            <div>Phone: {profile.phone}</div>
-            <div>Role: {profile.role}</div>
-            <div>City: {profile.city}</div>
-            <div>Verification: {profile.verificationStatus}</div>
+        <div className="space-y-6">
+          {/* Account info (read-only) */}
+          <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-lg font-semibold text-slate-950 mb-4">Account info</h2>
+            <div className="grid gap-3 text-sm text-slate-600 md:grid-cols-2">
+              <div>
+                <span className="font-medium text-slate-800">Email</span>
+                <p className="mt-0.5">{user.email}</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div>
+                  <span className="font-medium text-slate-800">Role</span>
+                  <p className="mt-0.5 capitalize">{user.role}</p>
+                </div>
+                <div>
+                  <span className="font-medium text-slate-800">Verified</span>
+                  <p className="mt-0.5">
+                    {user.verified ? (
+                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Verified</Badge>
+                    ) : (
+                      <Badge variant="secondary">Unverified</Badge>
+                    )}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Edit profile */}
+          <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-lg font-semibold text-slate-950 mb-1">Edit profile</h2>
+            <p className="text-sm text-slate-500 mb-5">
+              Update your name, contact details, and bio visible to buyers.
+            </p>
+            <ProfileEditForm
+              user={{
+                name: user.name,
+                phone: user.phone,
+                city: user.city,
+                bio: user.bio,
+              }}
+            />
+          </div>
+
+          {/* Change password */}
+          <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-lg font-semibold text-slate-950 mb-1">Change password</h2>
+            <p className="text-sm text-slate-500 mb-5">
+              Choose a strong password of at least 6 characters.
+            </p>
+            <PasswordChangeForm />
           </div>
         </div>
       </PanelShell>

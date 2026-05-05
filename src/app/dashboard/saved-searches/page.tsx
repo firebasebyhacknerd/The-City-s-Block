@@ -1,5 +1,6 @@
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
 import { PanelShell } from "@/components/portal/PanelShell";
-import { savedSearches } from "@/lib/portal";
 
 const dashboardNav = [
   { label: "Overview", href: "/dashboard" },
@@ -10,7 +11,12 @@ const dashboardNav = [
   { label: "New listing", href: "/dashboard/new-listing" },
 ];
 
-export default function DashboardSavedSearchesPage() {
+export default async function DashboardSavedSearchesPage() {
+  const session = await getSession();
+  if (!session) {
+    redirect("/login");
+  }
+
   return (
     <main className="container-shell py-10 pb-16">
       <PanelShell
@@ -21,15 +27,11 @@ export default function DashboardSavedSearchesPage() {
       >
         <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
           <div className="text-xl font-semibold text-slate-950">Demand signals from saved buyer searches</div>
-          <div className="mt-5 space-y-3">
-            {savedSearches.map((search) => (
-              <div key={search.id} className="rounded-2xl border border-slate-200 p-4">
-                <div className="font-medium text-slate-950">{search.label}</div>
-                <div className="text-sm text-slate-500">
-                  {search.city} • {search.resultCount} results
-                </div>
-              </div>
-            ))}
+          <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center">
+            <div className="text-base font-medium text-slate-700">Saved search alerts are coming soon</div>
+            <p className="mt-2 text-sm text-slate-500">
+              You&apos;ll be able to save your search filters and get notified when new matching listings are posted.
+            </p>
           </div>
         </div>
       </PanelShell>

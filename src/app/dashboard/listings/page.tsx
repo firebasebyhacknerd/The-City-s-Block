@@ -1,48 +1,91 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
-import { PanelShell } from "@/components/portal/PanelShell";
+import { getSession } from "@/lib/auth";
+import { getMyListingsAction } from "@/app/actions/listings";
 import { Button } from "@/components/ui/button";
-import { formatPrice, listings } from "@/lib/portal";
+import { DeleteListingButton } from "@/components/dashboard/DeleteListingButton";
+import { ArrowLeft, PlusCircle, Pencil } from "lucide-react";
 
-const dashboardNav = [
-  { label: "Overview", href: "/dashboard" },
-  { label: "Listings", href: "/dashboard/listings" },
-  { label: "Leads", href: "/dashboard/leads" },
-  { label: "Saved searches", href: "/dashboard/saved-searches" },
-  { label: "Profile", href: "/dashboard/profile" },
-  { label: "New listing", href: "/dashboard/new-listing" },
-];
+export const metadata = { title: "My Listings | Dashboard" };
 
-export default function DashboardListingsPage() {
+export default async function MyListingsPage() {
+  const session = await getSession();
+  if (!session) redirect("/login");
+
+  const listings = await getMyListingsAction();
+
   return (
     <main className="container-shell py-10 pb-16">
-      <PanelShell
-        title="Business Dashboard"
-        description="Monitor listing performance, stay on top of new buyer interest, and keep your portfolio market-ready."
-        items={dashboardNav}
-        activeHref="/dashboard/listings"
-      >
-        <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <div className="text-xl font-semibold text-slate-950">Listings currently shaping your pipeline</div>
-            <Button asChild className="rounded-full bg-slate-950 text-white hover:bg-slate-800">
-              <Link href="/dashboard/new-listing">Post a new property</Link>
-            </Button>
-          </div>
-          <div className="space-y-3">
-            {listings.map((listing) => (
-              <div key={listing.id} className="flex flex-col gap-2 rounded-2xl border border-slate-200 p-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <div className="font-medium text-slate-950">{listing.title}</div>
-                  <div className="text-sm text-slate-500">
-                    {listing.city} • {listing.status} • {listing.propertyType}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button asChild variant="outline" size="sm" className="rounded-full">
+            <Link href="/dashboard"><ArrowLeft className="h-4 w-4" /></Link>
+          </Button>
+          <h1 className="text-2xl font-semibold text-slate-950">My Listings</h1>
+        </div>
+        <Button asChild className="rounded-full bg-slate-950 text-white hover:bg-slate-800 gap-2">
+          <Link href="/dashboard/new-listing"><PlusCircle className="h-4 w-4" /> Post New</Link>
+        </Button>
+      </div>
+
+      {listings.length === 0 ? (
+        <div className="rounded-[28px] border border-slate-200 bg-white p-16 text-center shadow-sm">
+          <div className="text-slate-400 mb-4">You haven't posted any listings yet.</div>
+          <Button asChild className="rounded-full bg-slate-950 text-white hover:bg-slate-800">
+            <Link href="/dashboard/new-listing">Post your first property</Link>
+          </Button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {listings.map((listing) => (
+            <div key={listing.id} className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
+              <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                <div className="flex gap-4">
+                  {listing.images?.[0] && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={listing.images[0]}
+                      alt={listing.title}
+                      className="h-20 w-28 rounded-2xl object-cover flex-shrink-0"
+                    />
+                  )}
+                  <div>
+                    <div className="font-semibold text-slate-950">{listing.title}</div>
+                    <div className="text-sm text-slate-500 mt-1">
+                      {listing.city}{listing.locality ? ` • ${listing.locality}` : ""} • {listing.property_type}
+                    </div>
+                    <div className="text-sm font-medium text-slate-700 mt-1">
+                      ₹{Number(listing.price).toLocaleString("en-IN")}
+                      {listing.price_unit === "month" ? "/month" : ""}
+                    </div>
+                    {listing.status === "rejected" && listing.rejection_reason && (
+                      <div className="mt-2 text-xs text-red-600 bg-red-50 rounded-xl px-3 py-1.5">
+                        Rejected: {listing.rejection_reason}
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="font-medium text-slate-950">{formatPrice(listing)}</div>
+                <div className="flex items-center gap-3">
+                  <span className={`rounded-full px-3 py-1 text-xs font-medium ${
+                    listing.status === "active" ? "bg-green-100 text-green-700" :
+                    listing.status === "pending" ? "bg-amber-100 text-amber-700" :
+                    listing.status === "rejected" ? "bg-red-100 text-red-700" :
+                    "bg-slate-100 text-slate-600"
+                  }`}>
+                    {listing.status}
+                  </span>
+                  <Button asChild variant="outline" size="sm" className="rounded-full">
+                    <Link href={`/dashboard/listings/${listing.id}/edit`}>
+                      <Pencil className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <DeleteListingButton id={listing.id} />
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      </PanelShell>
+      )}
     </main>
   );
 }

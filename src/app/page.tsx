@@ -1,19 +1,13 @@
 import Link from "next/link";
 import { ArrowRight, Building2, Landmark, Search, ShieldCheck, Sparkles } from "lucide-react";
-import { ListingCard } from "@/components/portal/ListingCard";
+import { DbListingCard } from "@/components/portal/DbListingCard";
 import { LocalityCard } from "@/components/portal/LocalityCard";
 import { MetricCard } from "@/components/portal/MetricCard";
 import { PageIntro } from "@/components/portal/PageIntro";
 import { ProjectCard } from "@/components/portal/ProjectCard";
 import { Button } from "@/components/ui/button";
-import {
-  formatInr,
-  getCommercialListings,
-  getFeaturedListings,
-  getPortalMetrics,
-  localities,
-  projects,
-} from "@/lib/portal";
+import { formatInr, localities, projects } from "@/lib/portal";
+import { getHomepageListingsAction } from "@/app/actions/listings";
 
 export const metadata = {
   title: "The City's Block | Buy, Rent, and Discover Property Across India",
@@ -21,10 +15,8 @@ export const metadata = {
     "Find verified homes, high-potential localities, and new projects across India with expert-backed guidance and sharper property discovery.",
 };
 
-export default function HomePage() {
-  const metrics = getPortalMetrics();
-  const featuredListings = getFeaturedListings();
-  const commercialListings = getCommercialListings().slice(0, 2);
+export default async function HomePage() {
+  const { featured, commercial, stats } = await getHomepageListingsAction();
 
   return (
     <main>
@@ -56,7 +48,7 @@ export default function HomePage() {
                 <label className="space-y-2">
                   <span className="text-xs uppercase tracking-[0.2em] text-slate-400">Intent</span>
                   <select
-                    name="listingType"
+                    name="listing_type"
                     className="h-12 w-full rounded-2xl border border-white/10 bg-white/10 px-4 text-sm text-white focus:outline-none"
                     defaultValue="sale"
                   >
@@ -67,7 +59,7 @@ export default function HomePage() {
                 <label className="space-y-2">
                   <span className="text-xs uppercase tracking-[0.2em] text-slate-400">Asset class</span>
                   <select
-                    name="assetClass"
+                    name="asset_class"
                     className="h-12 w-full rounded-2xl border border-white/10 bg-white/10 px-4 text-sm text-white focus:outline-none"
                     defaultValue="residential"
                   >
@@ -83,10 +75,10 @@ export default function HomePage() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <MetricCard label="Active listings" value={`${metrics.activeListings}+`} tone="dark" />
-              <MetricCard label="Verified experts" value={`${metrics.verifiedExperts}`} tone="dark" />
-              <MetricCard label="Projects to evaluate" value={`${metrics.projects}`} tone="dark" />
-              <MetricCard label="Cities in focus" value={`${metrics.cities}`} tone="dark" />
+              <MetricCard label="Active listings" value={`${stats.activeListings}+`} tone="dark" />
+              <MetricCard label="Verified experts" value="4" tone="dark" />
+              <MetricCard label="Projects to evaluate" value="3" tone="dark" />
+              <MetricCard label="Cities in focus" value={`${stats.cities}`} tone="dark" />
               <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 sm:col-span-2">
                 <div className="flex items-center gap-3 text-amber-300">
                   <ShieldCheck className="h-5 w-5" />
@@ -110,11 +102,17 @@ export default function HomePage() {
           title="Homes and spaces worth your attention first"
           description="Each featured listing is positioned to help buyers and renters understand the location, the value, and the next step without wading through noise."
         />
-        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {featuredListings.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
-          ))}
-        </div>
+        {featured.length === 0 ? (
+          <p className="mt-8 text-sm text-slate-500">
+            No featured listings yet — check back soon
+          </p>
+        ) : (
+          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {featured.map((listing) => (
+              <DbListingCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="container-shell py-10">
@@ -143,11 +141,13 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            {commercialListings.map((listing) => (
-              <ListingCard key={listing.id} listing={listing} />
-            ))}
-          </div>
+          {commercial.length > 0 && (
+            <div className="grid gap-6 md:grid-cols-2">
+              {commercial.map((listing) => (
+                <DbListingCard key={listing.id} listing={listing} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

@@ -1,26 +1,21 @@
-import { ListingComposer } from "@/components/portal/ListingComposer";
-import { PanelShell } from "@/components/portal/PanelShell";
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
+import { NewListingForm } from "@/components/dashboard/NewListingForm";
 
-const dashboardNav = [
-  { label: "Overview", href: "/dashboard" },
-  { label: "Listings", href: "/dashboard/listings" },
-  { label: "Leads", href: "/dashboard/leads" },
-  { label: "Saved searches", href: "/dashboard/saved-searches" },
-  { label: "Profile", href: "/dashboard/profile" },
-  { label: "New listing", href: "/dashboard/new-listing" },
-];
+export const metadata = { title: "Post a Listing | The City's Block" };
 
-export default function DashboardNewListingPage() {
+export default async function NewListingPage() {
+  const session = await getSession();
+  if (!session) redirect("/login");
+  if (!["owner", "agent", "admin"].includes(session.role)) redirect("/dashboard");
+
   return (
     <main className="container-shell py-10 pb-16">
-      <PanelShell
-        title="Business Dashboard"
-        description="Monitor listing performance, stay on top of new buyer interest, and keep your portfolio market-ready."
-        items={dashboardNav}
-        activeHref="/dashboard/new-listing"
-      >
-        <ListingComposer />
-      </PanelShell>
+      <div className="mb-6">
+        <h1 className="text-3xl font-semibold text-slate-950">Post a New Listing</h1>
+        <p className="mt-1 text-slate-500">Fill in the details below. Your listing will go live after admin approval.</p>
+      </div>
+      <NewListingForm />
     </main>
   );
 }

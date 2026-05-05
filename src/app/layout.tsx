@@ -16,7 +16,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://the-citys-block.vercel.app"),
+  metadataBase: new URL("https://the-city-s-block.vercel.app"),
   title: "The City's Block | India Property Portal",
   description:
     "Discover residential and commercial listings, projects, localities, and verified agents across India's top property markets.",
