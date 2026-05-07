@@ -7,7 +7,8 @@ import { PromoBanner } from "@/components/home/PromoBanner";
 import { LocalityTabs } from "@/components/home/LocalityTabs";
 import { PropertyLinksSection } from "@/components/home/PropertyLinksSection";
 import { FAQSection } from "@/components/home/FAQSection";
-import { projects, localities, getLocality, getProjectBuilder } from "@/lib/portal";
+import { FeaturedListings, type HomepageListing } from "@/components/home/FeaturedListings";
+import { projects, localities, listings, getLocality, getProjectBuilder } from "@/lib/portal";
 
 export const metadata = {
   title: "The City's Block | Buy, Rent & Discover Property Across India",
@@ -16,6 +17,50 @@ export const metadata = {
 };
 
 // ── data helpers ──────────────────────────────────────────────────────────────
+
+// ── listings helpers ──────────────────────────────────────────────────────────
+
+function toHomepageListing(l: typeof listings[0]): HomepageListing {
+  const loc = getLocality(l.localitySlug);
+  return {
+    id: l.id,
+    title: l.title,
+    city: l.city,
+    locality: loc?.displayName ?? l.localitySlug,
+    price: l.price,
+    priceUnit: l.priceUnit,
+    area: l.area,
+    bhk: l.bhk,
+    bathrooms: l.bathrooms,
+    propertyType: l.propertyType,
+    listingType: l.listingType,
+    verified: l.verified,
+    images: l.images,
+  };
+}
+
+function buildOfficeListings(): HomepageListing[] {
+  return listings
+    .filter((l) => l.propertyType === "Office Space" && l.status === "active")
+    .slice(0, 8)
+    .map(toHomepageListing);
+}
+
+function buildBungalowListings(): HomepageListing[] {
+  return listings
+    .filter((l) => l.propertyType === "Villa" && l.status === "active")
+    .slice(0, 4)
+    .map(toHomepageListing);
+}
+
+function buildFeaturedListings(): HomepageListing[] {
+  return listings
+    .filter((l) => l.featured && l.status === "active")
+    .slice(0, 4)
+    .map(toHomepageListing);
+}
+
+// ── projects helpers ──────────────────────────────────────────────────────────
 
 function buildTrendingProjects() {
   return projects.map((p) => {
@@ -161,12 +206,14 @@ export default function HomePage() {
   const trendingProjects = buildTrendingProjects();
   const localityTabs = buildLocalityTabs();
   const propertyLinks = buildPropertyLinks();
+  const officeListings = buildOfficeListings();
+  const bungalowListings = buildBungalowListings();
+  const featuredListings = buildFeaturedListings();
 
   return (
     <main className="bg-white">
       {/* ── 1. Hero Banner ── */}
       <section className="relative min-h-[420px] overflow-hidden bg-gray-900 md:min-h-[500px]">
-        {/* Background image */}
         <Image
           src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1920&q=80"
           alt="Hero banner"
@@ -174,8 +221,6 @@ export default function HomePage() {
           priority
           className="object-cover opacity-40"
         />
-
-        {/* Overlay content */}
         <div className="relative z-10 flex flex-col items-center justify-center px-4 py-16 text-center md:py-24">
           <h1 className="mb-8 text-3xl font-bold text-white md:text-5xl">
             Explore 500+ Verified Properties in Ahmedabad
@@ -189,13 +234,42 @@ export default function HomePage() {
       {/* ── 2. Find Your Next Home ── */}
       <FindYourHome />
 
-      {/* ── 3. Trending Projects ── */}
+      {/* ── 3. Featured Listings ── */}
+      {featuredListings.length > 0 && (
+        <FeaturedListings
+          title="Featured Properties"
+          listings={featuredListings}
+          viewAllHref="/search?featured=true"
+        />
+      )}
+
+      {/* ── 4. Office Spaces ── */}
+      {officeListings.length > 0 && (
+        <section className="bg-gray-50">
+          <FeaturedListings
+            title="Office Spaces for Rent – Ahmedabad"
+            listings={officeListings}
+            viewAllHref="/search?city=Ahmedabad&propertyType=Office+Space"
+          />
+        </section>
+      )}
+
+      {/* ── 5. Bungalows for Sale ── */}
+      {bungalowListings.length > 0 && (
+        <FeaturedListings
+          title="Bungalows for Sale – Ahmedabad"
+          listings={bungalowListings}
+          viewAllHref="/search?city=Ahmedabad&propertyType=Villa"
+        />
+      )}
+
+      {/* ── 6. Trending Projects ── */}
       <TrendingProjects projects={trendingProjects} />
 
-      {/* ── 4. Promo Banner ── */}
+      {/* ── 7. Promo Banner ── */}
       <PromoBanner />
 
-      {/* ── 5. Explore by Localities ── */}
+      {/* ── 8. Explore by Localities ── */}
       <section className="bg-white py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4">
           <h2 className="mb-6 text-2xl font-bold text-gray-900">
@@ -205,7 +279,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 6. Property Options ── */}
+      {/* ── 9. Property Options ── */}
       <section className="bg-gray-50 py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4">
           <h2 className="mb-8 text-2xl font-bold text-gray-900">Property Options</h2>
@@ -213,7 +287,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 7. FAQ ── */}
+      {/* ── 10. FAQ ── */}
       <FAQSection />
     </main>
   );
