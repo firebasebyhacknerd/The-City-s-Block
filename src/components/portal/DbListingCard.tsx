@@ -17,7 +17,7 @@ export function DbListingCard({ listing }: { listing: any }) {
     : formattedPrice;
 
   return (
-    <Link href={`/listings/${listing.id}`} className="group block rounded-[24px] border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+    <Link href={`/listings/${listing.id}`} className="group block rounded-[28px] border border-slate-200 bg-white shadow-sm hover:shadow-md hover:border-slate-300 transition-all overflow-hidden">
       <div className="relative h-48 bg-slate-100">
         {listing.images?.[0] ? (
           <Image
@@ -43,13 +43,13 @@ export function DbListingCard({ listing }: { listing: any }) {
           <FavoriteButton listingId={listing.id} initialSaved={false} />
         </div>
       </div>
-      <div className="p-4 space-y-2">
-        <div className="font-semibold text-slate-950 line-clamp-2 leading-snug">{listing.title}</div>
-        <div className="flex items-center gap-1 text-sm text-slate-500">
+      <div className="p-4 space-y-2 group-hover:bg-slate-50 transition-colors">
+        <div className="font-semibold text-slate-950 line-clamp-2 leading-snug group-hover:text-slate-900">{listing.title}</div>
+        <div className="flex items-center gap-1 text-sm text-slate-500 group-hover:text-slate-600">
           <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
           <span className="truncate">{listing.locality ? `${listing.locality}, ` : ""}{listing.city}</span>
         </div>
-        <div className="flex items-center gap-3 text-xs text-slate-500">
+        <div className="flex items-center gap-3 text-xs text-slate-500 group-hover:text-slate-600">
           {listing.bhk && (
             <span className="flex items-center gap-1"><BedDouble className="h-3.5 w-3.5" />{listing.bhk} BHK</span>
           )}
@@ -61,8 +61,8 @@ export function DbListingCard({ listing }: { listing: any }) {
           )}
         </div>
         <div className="flex items-center justify-between pt-1">
-          <div className="text-lg font-bold text-slate-950">{displayPrice}</div>
-          <div className="text-xs text-slate-400">{listing.property_type}</div>
+          <div className="text-lg font-bold text-slate-950 group-hover:text-blue-600 transition-colors">{displayPrice}</div>
+          <div className="text-xs text-slate-400 group-hover:text-slate-500">{listing.property_type}</div>
         </div>
       </div>
     </Link>

@@ -20,7 +20,14 @@ export function MetricCard({
           : "border-slate-200 bg-white text-slate-950",
       )}
     >
-      <div className="text-sm text-slate-500">{label}</div>
+      <div
+        className={cn(
+          "text-sm",
+          tone === "dark" ? "text-white/60" : "text-slate-500",
+        )}
+      >
+        {label}
+      </div>
       <div className="mt-1 text-2xl font-semibold tracking-tight">{value}</div>
     </div>
   );

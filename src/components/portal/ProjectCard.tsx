@@ -2,14 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { Building2, CalendarClock, MapPin } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatInr, getLocality, type Project } from "@/lib/portal";
+import { formatInr, getLocality, getProjectBuilder, type Project } from "@/lib/portal";
 
 export function ProjectCard({ project }: { project: Project }) {
   const locality = getLocality(project.localitySlug);
+  const builder = getProjectBuilder(project);
 
   return (
     <Link href={`/project/${project.slug}`}>
-      <Card className="overflow-hidden rounded-[28px] border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+      <Card className="overflow-hidden rounded-[28px] border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:opacity-95">
         <div className="relative aspect-[16/10]">
           <Image src={project.coverImage} alt={project.name} fill className="object-cover" />
         </div>
@@ -17,6 +18,9 @@ export function ProjectCard({ project }: { project: Project }) {
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="text-lg font-semibold text-slate-950">{project.name}</div>
+              {builder && (
+                <div className="mt-0.5 text-sm text-slate-600">by {builder.name}</div>
+              )}
               <div className="mt-1 text-sm text-slate-500">
                 {formatInr(project.minPrice, true)} - {formatInr(project.maxPrice, true)}
               </div>
