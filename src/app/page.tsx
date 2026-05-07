@@ -1,208 +1,248 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Building2, Landmark, Search, ShieldCheck, Sparkles } from "lucide-react";
-import { DbListingCard } from "@/components/portal/DbListingCard";
-import { LocalityCard } from "@/components/portal/LocalityCard";
-import { MetricCard } from "@/components/portal/MetricCard";
-import { PageIntro } from "@/components/portal/PageIntro";
-import { ProjectCard } from "@/components/portal/ProjectCard";
-import { Button } from "@/components/ui/button";
-import { formatInr, localities, projects } from "@/lib/portal";
-import { getHomepageListingsAction } from "@/app/actions/listings";
+import { HeroSearch } from "@/components/home/HeroSearch";
+import { FindYourHome } from "@/components/home/FindYourHome";
+import { TrendingProjects } from "@/components/home/TrendingProjects";
+import { PromoBanner } from "@/components/home/PromoBanner";
+import { LocalityTabs } from "@/components/home/LocalityTabs";
+import { PropertyLinksSection } from "@/components/home/PropertyLinksSection";
+import { FAQSection } from "@/components/home/FAQSection";
+import { projects, localities, getLocality, getProjectBuilder } from "@/lib/portal";
 
 export const metadata = {
-  title: "The City's Block | Buy, Rent, and Discover Property Across India",
+  title: "The City's Block | Buy, Rent & Discover Property Across India",
   description:
-    "Find verified homes, high-potential localities, and new projects across India with expert-backed guidance and sharper property discovery.",
+    "Find verified homes, new launches, and commercial spaces across India's top property markets with expert-backed guidance.",
 };
 
-export default async function HomePage() {
-  const { featured, commercial, stats } = await getHomepageListingsAction();
+// ── data helpers ──────────────────────────────────────────────────────────────
+
+function buildTrendingProjects() {
+  return projects.map((p) => {
+    const loc = getLocality(p.localitySlug);
+    const builder = getProjectBuilder(p);
+    return {
+      id: p.id,
+      slug: p.slug,
+      name: p.name,
+      builder: builder?.name ?? "Builder",
+      coverImage: p.coverImage,
+      configurations: p.configurations,
+      locality: loc?.displayName ?? "",
+      city: p.city,
+      minPrice: p.minPrice,
+      maxPrice: p.maxPrice,
+    };
+  });
+}
+
+function buildLocalityTabs() {
+  return localities.map((loc) => ({
+    name: loc.displayName,
+    projects: projects
+      .filter((p) => p.localitySlug === loc.slug)
+      .map((p) => ({
+        name: p.name,
+        slug: p.slug,
+        city: p.city,
+        localitySlug: p.localitySlug,
+      })),
+  }));
+}
+
+function buildPropertyLinks() {
+  return [
+    {
+      title: "Popular BHK Searches",
+      links: [
+        { label: "2 BHK Flats", href: "/search?bhk=2+BHK" },
+        { label: "3 BHK Flats", href: "/search?bhk=3+BHK" },
+        { label: "4 BHK Flats", href: "/search?bhk=4+BHK" },
+        { label: "5+ BHK Flats", href: "/search?bhk=5%2B+BHK" },
+        { label: "3 BHK with Penthouse", href: "/search?bhk=3+BHK&propertyType=Apartment" },
+        { label: "4 BHK Duplex", href: "/search?bhk=4+BHK" },
+      ],
+    },
+    {
+      title: "Popular Flat Searches",
+      links: [
+        { label: "Flats in Gurugram", href: "/search?city=Gurugram" },
+        { label: "Flats in Noida", href: "/search?city=Noida" },
+        { label: "Flats in Bengaluru", href: "/search?city=Bengaluru" },
+        { label: "Flats in Mumbai", href: "/search?city=Mumbai" },
+        { label: "Flats in Golf Course Road", href: "/search?locality=golf-course-road" },
+        { label: "Flats in Whitefield", href: "/search?locality=whitefield" },
+        { label: "Flats in Sector 150", href: "/search?locality=sector-150" },
+        { label: "Flats in BKC", href: "/search?locality=bkc" },
+      ],
+    },
+    {
+      title: "Budget wise Searches",
+      links: [
+        { label: "Flats under ₹50 Lac", href: "/search?maxPrice=5000000" },
+        { label: "Flats under ₹75 Lac", href: "/search?maxPrice=7500000" },
+        { label: "Flats under ₹1 Cr", href: "/search?maxPrice=10000000" },
+        { label: "Flats under ₹1.5 Cr", href: "/search?maxPrice=15000000" },
+        { label: "Flats under ₹2 Cr", href: "/search?maxPrice=20000000" },
+        { label: "Flats under ₹3 Cr", href: "/search?maxPrice=30000000" },
+        { label: "2 BHK under ₹70 Lac", href: "/search?bhk=2+BHK&maxPrice=7000000" },
+        { label: "3 BHK under ₹1 Cr", href: "/search?bhk=3+BHK&maxPrice=10000000" },
+        { label: "3 BHK under ₹1.5 Cr", href: "/search?bhk=3+BHK&maxPrice=15000000" },
+        { label: "4 BHK under ₹3 Cr", href: "/search?bhk=4+BHK&maxPrice=30000000" },
+      ],
+    },
+    {
+      title: "Popular 2 BHK Searches",
+      links: [
+        { label: "2 BHK in Gurugram", href: "/search?city=Gurugram&bhk=2+BHK" },
+        { label: "2 BHK in Noida", href: "/search?city=Noida&bhk=2+BHK" },
+        { label: "2 BHK in Bengaluru", href: "/search?city=Bengaluru&bhk=2+BHK" },
+        { label: "2 BHK in Mumbai", href: "/search?city=Mumbai&bhk=2+BHK" },
+        { label: "2 BHK Ready to Move", href: "/search?bhk=2+BHK&possession=Ready+to+Move" },
+        { label: "2 BHK New Launch", href: "/search?bhk=2+BHK&possession=New+Launch" },
+      ],
+    },
+    {
+      title: "Popular 3 BHK Searches",
+      links: [
+        { label: "3 BHK in Gurugram", href: "/search?city=Gurugram&bhk=3+BHK" },
+        { label: "3 BHK in Noida", href: "/search?city=Noida&bhk=3+BHK" },
+        { label: "3 BHK in Bengaluru", href: "/search?city=Bengaluru&bhk=3+BHK" },
+        { label: "3 BHK in Mumbai", href: "/search?city=Mumbai&bhk=3+BHK" },
+        { label: "3 BHK Ready to Move", href: "/search?bhk=3+BHK&possession=Ready+to+Move" },
+        { label: "3 BHK Under Construction", href: "/search?bhk=3+BHK&possession=Under+Construction" },
+      ],
+    },
+    {
+      title: "Popular Residential Searches",
+      links: [
+        { label: "Property for Sale", href: "/search?listing_type=sale" },
+        { label: "Property for Rent", href: "/search?listing_type=rent" },
+        { label: "Apartments for Sale", href: "/search?propertyType=Apartment&listing_type=sale" },
+        { label: "Villas for Sale", href: "/search?propertyType=Villa&listing_type=sale" },
+        { label: "Ready to Move Flats", href: "/search?possession=Ready+to+Move" },
+        { label: "New Launch Projects", href: "/search?possession=New+Launch" },
+        { label: "Under Construction Flats", href: "/search?possession=Under+Construction" },
+        { label: "Residential Projects", href: "/projects" },
+      ],
+    },
+    {
+      title: "Popular Luxury Searches",
+      links: [
+        { label: "Luxury Apartments in Gurugram", href: "/search?city=Gurugram&propertyType=Apartment" },
+        { label: "Luxury Apartments in Mumbai", href: "/search?city=Mumbai&propertyType=Apartment" },
+        { label: "Luxury Villas in Bengaluru", href: "/search?city=Bengaluru&propertyType=Villa" },
+        { label: "Penthouses in Noida", href: "/search?city=Noida" },
+        { label: "4 BHK Luxury Flats", href: "/search?bhk=4+BHK" },
+        { label: "5 BHK Luxury Flats", href: "/search?bhk=5%2B+BHK" },
+      ],
+    },
+    {
+      title: "Ready To Move Searches",
+      links: [
+        { label: "2 BHK Ready to Move", href: "/search?bhk=2+BHK&possession=Ready+to+Move" },
+        { label: "3 BHK Ready to Move", href: "/search?bhk=3+BHK&possession=Ready+to+Move" },
+        { label: "4 BHK Ready to Move", href: "/search?bhk=4+BHK&possession=Ready+to+Move" },
+        { label: "Ready to Move in Gurugram", href: "/search?city=Gurugram&possession=Ready+to+Move" },
+        { label: "Ready to Move in Bengaluru", href: "/search?city=Bengaluru&possession=Ready+to+Move" },
+        { label: "Ready to Move in Mumbai", href: "/search?city=Mumbai&possession=Ready+to+Move" },
+      ],
+    },
+    {
+      title: "New Launch Searches",
+      links: [
+        { label: "New Launch in Gurugram", href: "/search?city=Gurugram&possession=New+Launch" },
+        { label: "New Launch in Noida", href: "/search?city=Noida&possession=New+Launch" },
+        { label: "New Launch in Bengaluru", href: "/search?city=Bengaluru&possession=New+Launch" },
+        { label: "New Launch in Mumbai", href: "/search?city=Mumbai&possession=New+Launch" },
+        { label: "New Launch Projects", href: "/projects" },
+      ],
+    },
+    {
+      title: "List Property",
+      links: [
+        { label: "List Property for Sale", href: "/signup" },
+        { label: "Sell Property Online", href: "/signup" },
+        { label: "Post Property Free", href: "/signup" },
+        { label: "Advertise Property", href: "/signup" },
+        { label: "Sell Without Broker", href: "/signup" },
+      ],
+    },
+    {
+      title: "Trending Searches",
+      links: [
+        { label: "Property for sale near me", href: "/search?listing_type=sale" },
+        { label: "Apartments for sale near me", href: "/search?propertyType=Apartment&listing_type=sale" },
+        { label: "Ready to move flats near me", href: "/search?possession=Ready+to+Move" },
+        { label: "New launch properties near me", href: "/search?possession=New+Launch" },
+        { label: "Luxury property for sale", href: "/search?listing_type=sale" },
+        { label: "Flats under ₹1 Cr near me", href: "/search?maxPrice=10000000" },
+        { label: "Property consultant near me", href: "/agents" },
+      ],
+    },
+  ];
+}
+
+// ── page ──────────────────────────────────────────────────────────────────────
+
+export default function HomePage() {
+  const trendingProjects = buildTrendingProjects();
+  const localityTabs = buildLocalityTabs();
+  const propertyLinks = buildPropertyLinks();
 
   return (
-    <main>
-      <section className="container-shell py-10 md:py-16">
-        <div className="overflow-hidden rounded-[36px] border border-slate-200 bg-slate-950 px-6 py-10 text-white shadow-2xl md:px-10 md:py-14">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200">
-                <Sparkles className="h-4 w-4 text-amber-300" />
-                Verified homes. Smarter locality insight. Better decisions.
-              </div>
-              <div className="space-y-4">
-                <h1 className="max-w-3xl font-headline text-5xl font-semibold tracking-tight md:text-6xl">
-                  Find the right property in India without second-guessing every step.
-                </h1>
-                <p className="max-w-2xl text-lg leading-8 text-slate-300">
-                  Search homes, rentals, new launches, and commercial spaces with clearer filters, stronger locality context, and trusted experts who help you move faster.
-                </p>
-              </div>
-              <form action="/search" className="grid gap-3 rounded-[28px] border border-white/10 bg-white/5 p-4 md:grid-cols-[1.1fr_1fr_1fr_auto]">
-                <label className="space-y-2">
-                  <span className="text-xs uppercase tracking-[0.2em] text-slate-400">City / locality</span>
-                  <input
-                    name="q"
-                    placeholder="Search by city, locality, landmark, or project"
-                    className="h-12 w-full rounded-2xl border border-white/10 bg-white/10 px-4 text-sm text-white placeholder:text-slate-400 focus:outline-none"
-                  />
-                </label>
-                <label className="space-y-2">
-                  <span className="text-xs uppercase tracking-[0.2em] text-slate-400">Intent</span>
-                  <select
-                    name="listing_type"
-                    className="h-12 w-full rounded-2xl border border-white/10 bg-white/10 px-4 text-sm text-white focus:outline-none"
-                    defaultValue="sale"
-                  >
-                    <option value="sale">Buy</option>
-                    <option value="rent">Rent</option>
-                  </select>
-                </label>
-                <label className="space-y-2">
-                  <span className="text-xs uppercase tracking-[0.2em] text-slate-400">Asset class</span>
-                  <select
-                    name="asset_class"
-                    className="h-12 w-full rounded-2xl border border-white/10 bg-white/10 px-4 text-sm text-white focus:outline-none"
-                    defaultValue="residential"
-                  >
-                    <option value="residential">Residential</option>
-                    <option value="commercial">Commercial</option>
-                  </select>
-                </label>
-                <Button className="mt-6 h-12 rounded-2xl bg-amber-400 px-6 text-slate-950 hover:bg-amber-300 md:mt-auto">
-                  <Search className="h-4 w-4" />
-                  Explore Now
-                </Button>
-              </form>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <MetricCard label="Active listings" value={`${stats.activeListings}+`} tone="dark" />
-              <MetricCard label="Verified experts" value="4" tone="dark" />
-              <MetricCard label="Projects to evaluate" value="3" tone="dark" />
-              <MetricCard label="Cities in focus" value={`${stats.cities}`} tone="dark" />
-              <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 sm:col-span-2">
-                <div className="flex items-center gap-3 text-amber-300">
-                  <ShieldCheck className="h-5 w-5" />
-                  <span className="text-sm font-medium">Why serious seekers start here</span>
-                </div>
-                <div className="mt-3 grid gap-2 text-sm text-slate-300">
-                  <div>Shortlist homes with stronger confidence using verified inventory signals.</div>
-                  <div>Compare localities with market context, not just glossy photos.</div>
-                  <div>Connect with responsive experts when you are ready to inspect or negotiate.</div>
-                  <div>Move from browsing to action with clearer search paths across every category.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="container-shell py-10">
-        <PageIntro
-          eyebrow="Featured inventory"
-          title="Homes and spaces worth your attention first"
-          description="Each featured listing is positioned to help buyers and renters understand the location, the value, and the next step without wading through noise."
+    <main className="bg-white">
+      {/* ── 1. Hero Banner ── */}
+      <section className="relative min-h-[420px] overflow-hidden bg-gray-900 md:min-h-[500px]">
+        {/* Background image */}
+        <Image
+          src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1920&q=80"
+          alt="Hero banner"
+          fill
+          priority
+          className="object-cover opacity-40"
         />
-        {featured.length === 0 ? (
-          <p className="mt-8 text-sm text-slate-500">
-            No featured listings yet — check back soon
-          </p>
-        ) : (
-          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {featured.map((listing) => (
-              <DbListingCard key={listing.id} listing={listing} />
-            ))}
-          </div>
-        )}
-      </section>
 
-      <section className="container-shell py-10">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
-            <PageIntro
-              eyebrow="Commercial"
-              title="Commercial property with sharper decision signals"
-              description="Evaluate offices, retail, and income assets with clearer positioning, stronger market context, and direct access to the people behind the listing."
-            />
-            <div className="mt-6 space-y-4 text-sm leading-7 text-slate-600">
-              <div className="flex items-start gap-3">
-                <Landmark className="mt-1 h-4 w-4 text-amber-500" />
-                Explore Grade A offices, high-street retail, and strategic warehouse opportunities.
-              </div>
-              <div className="flex items-start gap-3">
-                <Building2 className="mt-1 h-4 w-4 text-amber-500" />
-                Move from broad search to meaningful conversations with owners, builders, and advisors.
-              </div>
-            </div>
-            <Button asChild className="mt-8 rounded-full bg-slate-950 text-white hover:bg-slate-800">
-              <Link href="/commercial">
-                View commercial opportunities
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-
-          {commercial.length > 0 && (
-            <div className="grid gap-6 md:grid-cols-2">
-              {commercial.map((listing) => (
-                <DbListingCard key={listing.id} listing={listing} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="container-shell py-10">
-        <div className="flex items-end justify-between gap-4">
-          <PageIntro
-            eyebrow="New projects"
-            title="New launches for buyers who want an early advantage"
-            description="Review launch-stage and ready projects with pricing bands, possession clarity, builder context, and stronger brochure-led action."
-          />
-          <Button asChild variant="outline" className="rounded-full border-slate-200">
-            <Link href="/projects">Browse all projects</Link>
-          </Button>
-        </div>
-        <div className="mt-8 grid gap-6 lg:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
-      </section>
-
-      <section className="container-shell py-10">
-        <div className="flex items-end justify-between gap-4">
-          <PageIntro
-            eyebrow="Locality intelligence"
-            title="Locality pages that explain why an area matters"
-            description="Go beyond inventory counts with market cues, surrounding landmarks, and neighborhood context that helps narrow your shortlist with conviction."
-          />
-        </div>
-        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {localities.map((locality) => (
-            <LocalityCard key={locality.id} locality={locality} />
-          ))}
-        </div>
-      </section>
-
-      <section className="container-shell py-10 pb-16">
-        <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm md:p-10">
-          <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr]">
-            <div>
-              <PageIntro
-                eyebrow="Why buyers stay"
-                title="A more confident way to search"
-                description="From first search to final inquiry, every part of the experience is designed to reduce friction, strengthen trust, and make the next move feel obvious."
-              />
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <MetricCard label="Project pricing range" value={`${formatInr(9200000, true)} - ${formatInr(145000000, true)}`} />
-              <MetricCard label="Ways to connect" value="Call, inquiry, WhatsApp" />
-              <MetricCard label="Expert coverage" value="Buy, rent, projects, commercial" />
-              <MetricCard label="Decision support" value="Locality insight + verified experts" />
-            </div>
+        {/* Overlay content */}
+        <div className="relative z-10 flex flex-col items-center justify-center px-4 py-16 text-center md:py-24">
+          <h1 className="mb-8 text-3xl font-bold text-white md:text-5xl">
+            Explore 1000+ Verified Properties
+          </h1>
+          <div className="w-full max-w-5xl">
+            <HeroSearch />
           </div>
         </div>
       </section>
+
+      {/* ── 2. Find Your Next Home ── */}
+      <FindYourHome />
+
+      {/* ── 3. Trending Projects ── */}
+      <TrendingProjects projects={trendingProjects} />
+
+      {/* ── 4. Promo Banner ── */}
+      <PromoBanner />
+
+      {/* ── 5. Explore by Localities ── */}
+      <section className="bg-white py-12 md:py-16">
+        <div className="mx-auto max-w-7xl px-4">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900">
+            Explore New Projects by Localities
+          </h2>
+          <LocalityTabs tabs={localityTabs} />
+        </div>
+      </section>
+
+      {/* ── 6. Property Options ── */}
+      <section className="bg-gray-50 py-12 md:py-16">
+        <div className="mx-auto max-w-7xl px-4">
+          <h2 className="mb-8 text-2xl font-bold text-gray-900">Property Options</h2>
+          <PropertyLinksSection subsections={propertyLinks} />
+        </div>
+      </section>
+
+      {/* ── 7. FAQ ── */}
+      <FAQSection />
     </main>
   );
 }

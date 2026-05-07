@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { Fraunces, Manrope } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import Navbar from "@/components/layout/Navbar";
+import NavbarWrapper from "@/components/layout/NavbarWrapper";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 
-const manrope = Manrope({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
-});
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-headline",
 });
 
 export const metadata: Metadata = {
@@ -29,13 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${manrope.variable} ${fraunces.variable} bg-background font-body text-foreground antialiased`}>
-        <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(251,191,36,0.08),transparent_26%),linear-gradient(180deg,#fffdfa_0%,#f8fafc_55%,#ffffff_100%)]">
-          <Navbar />
-          {children}
-          <SiteFooter />
-          <Toaster />
-        </div>
+      <body className={`${inter.variable} bg-white font-body text-foreground antialiased`}>
+        <NavbarWrapper />
+        {children}
+        <SiteFooter />
+        <Toaster />
       </body>
     </html>
   );

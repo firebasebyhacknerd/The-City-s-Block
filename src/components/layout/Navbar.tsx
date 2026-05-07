@@ -1,89 +1,160 @@
+"use client";
+
 import Link from "next/link";
-import { Building2, LayoutDashboard, LogIn, Shield, PlusCircle, LogOut, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { getSession } from "@/lib/auth";
-import { signOutAction } from "@/app/actions/auth";
+import { useState } from "react";
+import {
+  Home, TrendingUp, Compass, Building2, Menu, X,
+  LogIn, LogOut, LayoutDashboard, PlusCircle, Shield, User, ChevronDown
+} from "lucide-react";
+
+interface NavbarClientProps {
+  session: { name: string; role: string } | null;
+}
 
 const primaryNav = [
-  { href: "/search?listing_type=sale", label: "Buy" },
-  { href: "/search?listing_type=rent", label: "Rent" },
-  { href: "/search?asset_class=commercial", label: "Commercial" },
-  { href: "/projects", label: "New Projects" },
+  { href: "/search?listing_type=sale", label: "Buy", icon: Home },
+  { href: "/search?listing_type=sale", label: "Sell", icon: TrendingUp },
+  { href: "/search", label: "Explore", icon: Compass },
+  { href: "/projects", label: "New Projects", icon: Building2 },
 ];
 
-export default async function Navbar() {
-  const session = await getSession();
+const secondaryTabs = [
+  { href: "/agents", label: "Top Agents" },
+  { href: "/projects", label: "Popular Projects" },
+  { href: "/search", label: "Top Localities" },
+];
+
+export function NavbarClient({ session }: NavbarClientProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="rounded-2xl bg-slate-950 p-2 text-amber-300 shadow-sm">
-            <Building2 className="h-5 w-5" />
+    <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
+      {/* Primary nav row */}
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 shrink-0">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-white font-bold text-sm">
+            VS
           </div>
-          <div>
-            <div className="font-headline text-lg font-semibold tracking-tight text-slate-950">
-              The City's Block
-            </div>
-            <div className="text-xs uppercase tracking-[0.2em] text-slate-400">
-              India Property Portal
-            </div>
-          </div>
+          <span className="font-bold text-gray-900 text-lg leading-tight hidden sm:block">
+            The City's Block
+          </span>
         </Link>
 
+        {/* Desktop primary nav */}
         <nav className="hidden items-center gap-1 lg:flex">
-          {primaryNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-950 transition"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {primaryNav.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:text-red-600"
+              >
+                <Icon className="h-4 w-4" />
+                {item.label}
+                <ChevronDown className="h-3 w-3 text-gray-400" />
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="flex items-center gap-2">
+        {/* Desktop auth */}
+        <div className="hidden items-center gap-2 lg:flex">
           {session ? (
             <>
               {session.role === "admin" && (
-                <Button asChild variant="outline" className="hidden rounded-full border-slate-200 md:inline-flex gap-1.5">
-                  <Link href="/admin"><Shield className="h-4 w-4" /> Admin</Link>
-                </Button>
+                <Link href="/admin" className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50">
+                  <Shield className="h-4 w-4" /> Admin
+                </Link>
               )}
               {(session.role === "owner" || session.role === "agent") && (
-                <>
-                  <Button asChild className="hidden rounded-full bg-amber-400 text-slate-950 hover:bg-amber-300 sm:inline-flex gap-1.5">
-                    <Link href="/dashboard/new-listing"><PlusCircle className="h-4 w-4" /> Post FREE</Link>
-                  </Button>
-                  <Button asChild variant="outline" className="hidden rounded-full border-slate-200 md:inline-flex gap-1.5">
-                    <Link href="/dashboard"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link>
-                  </Button>
-                </>
+                <Link href="/dashboard/new-listing" className="flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-red-700">
+                  <PlusCircle className="h-4 w-4" /> Post FREE
+                </Link>
               )}
-              <div className="flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5">
-                <User className="h-4 w-4 text-slate-500" />
-                <span className="text-sm text-slate-700 hidden md:block">{session.name.split(" ")[0]}</span>
+              <Link href="/dashboard" className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50">
+                <LayoutDashboard className="h-4 w-4" /> Dashboard
+              </Link>
+              <div className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-700">
+                <User className="h-4 w-4" />
+                {session.name.split(" ")[0]}
               </div>
-              <form action={signOutAction}>
-                <Button variant="ghost" size="sm" className="rounded-full gap-1.5 text-slate-600">
-                  <LogOut className="h-4 w-4" />
-                  <span className="hidden md:block">Sign out</span>
-                </Button>
-              </form>
             </>
           ) : (
             <>
-              <Button asChild className="hidden rounded-full bg-amber-400 text-slate-950 hover:bg-amber-300 sm:inline-flex gap-1.5">
-                <Link href="/signup"><PlusCircle className="h-4 w-4" /> Post FREE</Link>
-              </Button>
-              <Button asChild className="rounded-full bg-slate-950 text-white hover:bg-slate-800 gap-1.5">
-                <Link href="/login"><LogIn className="h-4 w-4" /> Sign in</Link>
-              </Button>
+              <Link href="/signup" className="flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-red-700">
+                <PlusCircle className="h-4 w-4" /> Post FREE
+              </Link>
+              <Link href="/login" className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                <LogIn className="h-4 w-4" /> Sign in
+              </Link>
             </>
           )}
         </div>
+
+        {/* Mobile menu toggle */}
+        <button
+          className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 lg:hidden"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle menu"
+        >
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
+
+      {/* Secondary tabs row */}
+      <div className="hidden border-t border-gray-100 lg:block">
+        <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-1.5">
+          {secondaryTabs.map((tab) => (
+            <Link
+              key={tab.label}
+              href={tab.href}
+              className="text-xs font-medium text-gray-500 transition hover:text-red-600"
+            >
+              {tab.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="border-t border-gray-100 bg-white px-4 py-4 lg:hidden">
+          <nav className="flex flex-col gap-1">
+            {primaryNav.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-red-600"
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.label}
+                </Link>
+              );
+            })}
+            <div className="mt-3 border-t border-gray-100 pt-3 flex flex-col gap-2">
+              {session ? (
+                <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-lg bg-red-600 px-3 py-2.5 text-sm font-semibold text-white">
+                  <LayoutDashboard className="h-4 w-4" /> Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link href="/signup" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-lg bg-red-600 px-3 py-2.5 text-sm font-semibold text-white">
+                    <PlusCircle className="h-4 w-4" /> Post FREE
+                  </Link>
+                  <Link href="/login" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2.5 text-sm font-medium text-gray-700">
+                    <LogIn className="h-4 w-4" /> Sign in
+                  </Link>
+                </>
+              )}
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

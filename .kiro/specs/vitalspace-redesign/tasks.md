@@ -60,7 +60,7 @@ This implementation plan transforms "The City's Block" homepage into a VitalSpac
     - **Validates: Requirements 5.4**
     - Test that any project renders with all required fields
 
-- [ ] 3. Checkpoint - Ensure all card component tests pass
+- [x] 3. Checkpoint - Ensure all card component tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 4. Implement Hero Section with Search Widget
@@ -123,7 +123,7 @@ This implementation plan transforms "The City's Block" homepage into a VitalSpac
     - **Validates: Requirements 3.2**
     - Test that any array of featured listings displays correct columns per viewport
 
-- [ ] 6. Checkpoint - Ensure hero and featured sections work correctly
+- [x] 6. Checkpoint - Ensure hero and featured sections work correctly
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 7. Implement Commercial Property section
@@ -179,7 +179,7 @@ This implementation plan transforms "The City's Block" homepage into a VitalSpac
     - **Validates: Requirements 6.3**
     - Test that any array of localities displays correct columns per viewport
 
-- [ ] 10. Checkpoint - Ensure all sections render correctly
+- [x] 10. Checkpoint - Ensure all sections render correctly
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 11. Implement homepage data fetching
@@ -281,7 +281,7 @@ This implementation plan transforms "The City's Block" homepage into a VitalSpac
     - Test with screen readers
     - Ensure proper ARIA labels where needed
 
-- [ ] 16. Final checkpoint - Ensure all tests pass and homepage is production-ready
+- [x] 16. Final checkpoint - Ensure all tests pass and homepage is production-ready
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes
