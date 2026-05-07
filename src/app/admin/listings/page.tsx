@@ -2,10 +2,9 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getSession } from "@/lib/auth";
 import { getAllListingsAction } from "@/app/actions/admin";
-import { Button } from "@/components/ui/button";
+import { AdminShell } from "@/components/admin/AdminShell";
 import { AdminListingActions } from "@/components/admin/AdminListingActions";
 import { AdminListingFeatureToggle } from "@/components/admin/AdminListingFeatureToggle";
-import { ArrowLeft } from "lucide-react";
 
 export const metadata = { title: "Listings | Admin Console" };
 
@@ -15,78 +14,93 @@ export default async function AdminListingsPage() {
 
   const listings = await getAllListingsAction();
   const pending = listings.filter((l) => l.status === "pending");
-  const others = listings.filter((l) => l.status !== "pending");
+  const active = listings.filter((l) => l.status === "active");
+  const others = listings.filter((l) => !["pending", "active"].includes(l.status));
 
   return (
-    <main className="container-shell py-10 pb-16">
-      <div className="mb-6 flex items-center gap-3">
-        <Button asChild variant="outline" size="sm" className="rounded-full">
-          <Link href="/admin"><ArrowLeft className="h-4 w-4" /></Link>
-        </Button>
-        <h1 className="text-2xl font-semibold text-slate-950">All Listings</h1>
-      </div>
-
+    <AdminShell
+      title="Listings"
+      subtitle={`${listings.length} total · ${pending.length} pending · ${active.length} active`}
+      currentPath="/admin/listings"
+    >
       {pending.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-amber-700 mb-4">
-            ⏳ Pending Approval ({pending.length})
+          <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-amber-700">
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-100 text-xs font-bold">{pending.length}</span>
+            Pending Approval
           </h2>
-          <div className="space-y-4">
-            {pending.map((listing) => (
-              <ListingRow key={listing.id} listing={listing} highlight />
-            ))}
+          <div className="space-y-3">
+            {pending.map((l) => <ListingRow key={l.id} listing={l} highlight />)}
           </div>
         </div>
       )}
 
-      <div>
-        <h2 className="text-lg font-semibold text-slate-700 mb-4">All Listings ({others.length})</h2>
-        <div className="space-y-4">
-          {others.map((listing) => (
-            <ListingRow key={listing.id} listing={listing} />
-          ))}
+      {active.length > 0 && (
+        <div className="mb-8">
+          <h2 className="mb-4 text-base font-semibold text-gray-700">Active ({active.length})</h2>
+          <div className="space-y-3">
+            {active.map((l) => <ListingRow key={l.id} listing={l} />)}
+          </div>
         </div>
-      </div>
-    </main>
+      )}
+
+      {others.length > 0 && (
+        <div>
+          <h2 className="mb-4 text-base font-semibold text-gray-500">Other ({others.length})</h2>
+          <div className="space-y-3">
+            {others.map((l) => <ListingRow key={l.id} listing={l} />)}
+          </div>
+        </div>
+      )}
+
+      {listings.length === 0 && (
+        <div className="rounded-xl border border-dashed border-gray-200 bg-white py-20 text-center text-gray-400">
+          No listings yet. They will appear here once users submit them.
+        </div>
+      )}
+    </AdminShell>
   );
 }
 
 function ListingRow({ listing, highlight }: { listing: any; highlight?: boolean }) {
+  const price = Number(listing.price);
+  const formattedPrice = price >= 10000000
+    ? `₹${(price / 10000000).toFixed(2)} Cr`
+    : price >= 100000
+    ? `₹${(price / 100000).toFixed(1)} L`
+    : `₹${price.toLocaleString("en-IN")}`;
+
   return (
-    <div className={`rounded-[24px] border p-5 shadow-sm bg-white ${highlight ? "border-amber-200" : "border-slate-200"}`}>
-      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-        <div className="flex gap-4">
-          {listing.images?.[0] && (
+    <div className={`rounded-xl border bg-white p-4 shadow-sm ${highlight ? "border-amber-200" : "border-gray-100"}`}>
+      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div className="flex gap-3">
+          {listing.images?.[0] ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={listing.images[0]}
-              alt={listing.title}
-              className="h-20 w-28 rounded-2xl object-cover flex-shrink-0"
-            />
+            <img src={listing.images[0]} alt={listing.title} className="h-16 w-24 shrink-0 rounded-lg object-cover" />
+          ) : (
+            <div className="h-16 w-24 shrink-0 rounded-lg bg-gray-100" />
           )}
-          <div>
-            <div className="font-semibold text-slate-950">{listing.title}</div>
-            <div className="text-sm text-slate-500 mt-0.5">
-              {listing.city}{listing.locality ? ` • ${listing.locality}` : ""} • {listing.property_type}
+          <div className="min-w-0">
+            <div className="font-semibold text-gray-900 line-clamp-1">{listing.title}</div>
+            <div className="mt-0.5 text-xs text-gray-500">
+              {listing.city}{listing.locality ? ` · ${listing.locality}` : ""} · {listing.property_type}
             </div>
-            <div className="text-sm text-slate-600 mt-1">
-              ₹{Number(listing.price).toLocaleString("en-IN")}
-              {listing.price_unit === "month" ? "/month" : ""} • {listing.area ? `${listing.area} sq.ft.` : ""}
+            <div className="mt-1 text-sm font-medium text-gray-800">
+              {formattedPrice}{listing.price_unit === "month" ? "/mo" : ""}
+              {listing.area ? ` · ${listing.area} sq.ft.` : ""}
             </div>
-            <div className="text-xs text-slate-400 mt-1">
-              Posted by: <span className="text-slate-600">{listing.owner_name}</span> ({listing.owner_email})
+            <div className="mt-0.5 text-xs text-gray-400">
+              By: {listing.owner_name} ({listing.owner_email})
             </div>
-            {listing.description && (
-              <div className="text-xs text-slate-500 mt-1 line-clamp-2">{listing.description}</div>
-            )}
           </div>
         </div>
-        <div className="flex flex-col items-end gap-2 min-w-[160px]">
-          <span className={`rounded-full px-3 py-1 text-xs font-medium ${
+
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
             listing.status === "active" ? "bg-green-100 text-green-700" :
             listing.status === "pending" ? "bg-amber-100 text-amber-700" :
             listing.status === "rejected" ? "bg-red-100 text-red-700" :
-            "bg-slate-100 text-slate-600"
+            "bg-gray-100 text-gray-600"
           }`}>
             {listing.status}
           </span>
