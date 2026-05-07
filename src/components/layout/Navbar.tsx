@@ -33,12 +33,25 @@ export function NavbarClient({ session }: NavbarClientProps) {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-white font-bold text-sm">
-            VS
+          {/* Brand mark: gold ring + dark green buildings */}
+          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A84C] bg-white">
+            <svg viewBox="0 0 32 32" className="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              {/* Left building */}
+              <rect x="4" y="10" width="7" height="16" rx="0.5" fill="#1B4332" />
+              {/* Middle tall building */}
+              <rect x="12.5" y="4" width="7" height="22" rx="0.5" fill="#1B4332" />
+              {/* Right building */}
+              <rect x="21" y="10" width="7" height="16" rx="0.5" fill="#1B4332" />
+              {/* Roof peaks */}
+              <polygon points="7.5,10 4,10 7.5,5" fill="#1B4332" />
+              <polygon points="16,4 12.5,4 16,0" fill="#1B4332" />
+              <polygon points="24.5,10 21,10 24.5,5" fill="#1B4332" />
+            </svg>
           </div>
-          <span className="font-bold text-gray-900 text-lg leading-tight hidden sm:block">
-            The City's Block
-          </span>
+          <div className="hidden sm:block leading-tight">
+            <div className="font-bold text-[#1B4332] text-base">The City's Blocks</div>
+            <div className="text-[10px] font-semibold text-[#C9A84C] uppercase tracking-wide">Trusted Advisory</div>
+          </div>
         </Link>
 
         {/* Desktop primary nav */}

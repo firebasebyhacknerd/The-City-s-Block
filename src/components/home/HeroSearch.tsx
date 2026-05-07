@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { Search, MapPin, ChevronDown } from "lucide-react";
 
 const popularLocalities = [
-  { name: "Golf Course Road", city: "Gurugram", slug: "golf-course-road" },
-  { name: "Sector 150", city: "Noida", slug: "sector-150" },
-  { name: "Whitefield", city: "Bengaluru", slug: "whitefield" },
-  { name: "BKC", city: "Mumbai", slug: "bkc" },
+  { name: "Bodakdev", city: "Ahmedabad", slug: "bodakdev" },
+  { name: "Ashram Road", city: "Ahmedabad", slug: "ashram-road" },
+  { name: "Vastrapur", city: "Ahmedabad", slug: "vastrapur" },
+  { name: "Science City", city: "Ahmedabad", slug: "science-city" },
+  { name: "GIFT City", city: "Ahmedabad", slug: "ashram-road" },
 ];
 
 const bhkOptions = ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "5+ BHK"];

@@ -28,10 +28,21 @@ export function SiteFooter() {
           {/* Left: brand */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-white font-bold text-sm">
-                VS
+              {/* Brand mark */}
+              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A84C] bg-white">
+                <svg viewBox="0 0 32 32" className="h-6 w-6" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <rect x="4" y="10" width="7" height="16" rx="0.5" fill="#1B4332" />
+                  <rect x="12.5" y="4" width="7" height="22" rx="0.5" fill="#1B4332" />
+                  <rect x="21" y="10" width="7" height="16" rx="0.5" fill="#1B4332" />
+                  <polygon points="7.5,10 4,10 7.5,5" fill="#1B4332" />
+                  <polygon points="16,4 12.5,4 16,0" fill="#1B4332" />
+                  <polygon points="24.5,10 21,10 24.5,5" fill="#1B4332" />
+                </svg>
               </div>
-              <span className="font-bold text-gray-900 text-lg">The City's Block</span>
+              <div className="leading-tight">
+                <div className="font-bold text-[#1B4332] text-base">The City's Blocks</div>
+                <div className="text-[10px] font-semibold text-[#C9A84C] uppercase tracking-wide">Trusted Advisory</div>
+              </div>
             </div>
             <p className="max-w-md text-sm leading-6 text-gray-500">
               A trustworthy one-stop solution for all your property needs. We help you buy, rent, and discover verified properties across India's top markets.

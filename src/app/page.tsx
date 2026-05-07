@@ -37,17 +37,19 @@ function buildTrendingProjects() {
 }
 
 function buildLocalityTabs() {
-  return localities.map((loc) => ({
-    name: loc.displayName,
-    projects: projects
-      .filter((p) => p.localitySlug === loc.slug)
-      .map((p) => ({
-        name: p.name,
-        slug: p.slug,
-        city: p.city,
-        localitySlug: p.localitySlug,
-      })),
-  }));
+  return localities
+    .filter((loc) => loc.city === "Ahmedabad")
+    .map((loc) => ({
+      name: loc.displayName,
+      projects: projects
+        .filter((p) => p.localitySlug === loc.slug)
+        .map((p) => ({
+          name: p.name,
+          slug: p.slug,
+          city: p.city,
+          localitySlug: p.localitySlug,
+        })),
+    }));
 }
 
 function buildPropertyLinks() {
@@ -55,129 +57,99 @@ function buildPropertyLinks() {
     {
       title: "Popular BHK Searches",
       links: [
-        { label: "2 BHK Flats", href: "/search?bhk=2+BHK" },
-        { label: "3 BHK Flats", href: "/search?bhk=3+BHK" },
-        { label: "4 BHK Flats", href: "/search?bhk=4+BHK" },
-        { label: "5+ BHK Flats", href: "/search?bhk=5%2B+BHK" },
-        { label: "3 BHK with Penthouse", href: "/search?bhk=3+BHK&propertyType=Apartment" },
-        { label: "4 BHK Duplex", href: "/search?bhk=4+BHK" },
+        { label: "2 BHK Flats in Ahmedabad", href: "/search?city=Ahmedabad&bhk=2+BHK" },
+        { label: "3 BHK Flats in Ahmedabad", href: "/search?city=Ahmedabad&bhk=3+BHK" },
+        { label: "4 BHK Flats in Ahmedabad", href: "/search?city=Ahmedabad&bhk=4+BHK" },
+        { label: "5+ BHK Flats in Ahmedabad", href: "/search?city=Ahmedabad&bhk=5%2B+BHK" },
+        { label: "3 BHK Bungalows", href: "/search?city=Ahmedabad&bhk=3+BHK&propertyType=Villa" },
+        { label: "4 BHK Bungalows", href: "/search?city=Ahmedabad&bhk=4+BHK&propertyType=Villa" },
+        { label: "6 BHK Bungalows", href: "/search?city=Ahmedabad&bhk=6+BHK&propertyType=Villa" },
       ],
     },
     {
-      title: "Popular Flat Searches",
+      title: "Office Space Searches",
       links: [
-        { label: "Flats in Gurugram", href: "/search?city=Gurugram" },
-        { label: "Flats in Noida", href: "/search?city=Noida" },
-        { label: "Flats in Bengaluru", href: "/search?city=Bengaluru" },
-        { label: "Flats in Mumbai", href: "/search?city=Mumbai" },
-        { label: "Flats in Golf Course Road", href: "/search?locality=golf-course-road" },
-        { label: "Flats in Whitefield", href: "/search?locality=whitefield" },
-        { label: "Flats in Sector 150", href: "/search?locality=sector-150" },
-        { label: "Flats in BKC", href: "/search?locality=bkc" },
+        { label: "Furnished Offices in Ahmedabad", href: "/search?city=Ahmedabad&propertyType=Office+Space&furnishing=Fully+Furnished" },
+        { label: "Unfurnished Offices in Ahmedabad", href: "/search?city=Ahmedabad&propertyType=Office+Space&furnishing=Unfurnished" },
+        { label: "Offices on Ashram Road", href: "/search?city=Ahmedabad&locality=ashram-road&propertyType=Office+Space" },
+        { label: "Offices in Bodakdev", href: "/search?city=Ahmedabad&locality=bodakdev&propertyType=Office+Space" },
+        { label: "Offices in Vastrapur", href: "/search?city=Ahmedabad&locality=vastrapur&propertyType=Office+Space" },
+        { label: "Offices in GIFT City", href: "/search?city=Ahmedabad&q=GIFT+City" },
+        { label: "Small Offices under ₹30K/mo", href: "/search?city=Ahmedabad&propertyType=Office+Space&maxPrice=30000" },
+        { label: "Large Offices above ₹1L/mo", href: "/search?city=Ahmedabad&propertyType=Office+Space&minPrice=100000" },
       ],
     },
     {
       title: "Budget wise Searches",
       links: [
-        { label: "Flats under ₹50 Lac", href: "/search?maxPrice=5000000" },
-        { label: "Flats under ₹75 Lac", href: "/search?maxPrice=7500000" },
-        { label: "Flats under ₹1 Cr", href: "/search?maxPrice=10000000" },
-        { label: "Flats under ₹1.5 Cr", href: "/search?maxPrice=15000000" },
-        { label: "Flats under ₹2 Cr", href: "/search?maxPrice=20000000" },
-        { label: "Flats under ₹3 Cr", href: "/search?maxPrice=30000000" },
-        { label: "2 BHK under ₹70 Lac", href: "/search?bhk=2+BHK&maxPrice=7000000" },
-        { label: "3 BHK under ₹1 Cr", href: "/search?bhk=3+BHK&maxPrice=10000000" },
-        { label: "3 BHK under ₹1.5 Cr", href: "/search?bhk=3+BHK&maxPrice=15000000" },
-        { label: "4 BHK under ₹3 Cr", href: "/search?bhk=4+BHK&maxPrice=30000000" },
+        { label: "Flats under ₹50 Lac", href: "/search?city=Ahmedabad&maxPrice=5000000" },
+        { label: "Flats under ₹1 Cr", href: "/search?city=Ahmedabad&maxPrice=10000000" },
+        { label: "Flats under ₹1.5 Cr", href: "/search?city=Ahmedabad&maxPrice=15000000" },
+        { label: "Bungalows under ₹5 Cr", href: "/search?city=Ahmedabad&propertyType=Villa&maxPrice=50000000" },
+        { label: "Bungalows under ₹10 Cr", href: "/search?city=Ahmedabad&propertyType=Villa&maxPrice=100000000" },
+        { label: "Bungalows above ₹10 Cr", href: "/search?city=Ahmedabad&propertyType=Villa&minPrice=100000000" },
+        { label: "3 BHK under ₹1 Cr", href: "/search?city=Ahmedabad&bhk=3+BHK&maxPrice=10000000" },
+        { label: "4 BHK under ₹3 Cr", href: "/search?city=Ahmedabad&bhk=4+BHK&maxPrice=30000000" },
       ],
     },
     {
-      title: "Popular 2 BHK Searches",
+      title: "Popular Locality Searches",
       links: [
-        { label: "2 BHK in Gurugram", href: "/search?city=Gurugram&bhk=2+BHK" },
-        { label: "2 BHK in Noida", href: "/search?city=Noida&bhk=2+BHK" },
-        { label: "2 BHK in Bengaluru", href: "/search?city=Bengaluru&bhk=2+BHK" },
-        { label: "2 BHK in Mumbai", href: "/search?city=Mumbai&bhk=2+BHK" },
-        { label: "2 BHK Ready to Move", href: "/search?bhk=2+BHK&possession=Ready+to+Move" },
-        { label: "2 BHK New Launch", href: "/search?bhk=2+BHK&possession=New+Launch" },
+        { label: "Property in Bodakdev", href: "/search?city=Ahmedabad&locality=bodakdev" },
+        { label: "Property in Vastrapur", href: "/search?city=Ahmedabad&locality=vastrapur" },
+        { label: "Property on Ashram Road", href: "/search?city=Ahmedabad&locality=ashram-road" },
+        { label: "Property in Science City", href: "/search?city=Ahmedabad&locality=science-city" },
+        { label: "Property in Bhadaj", href: "/search?city=Ahmedabad&q=Bhadaj" },
+        { label: "Property in Thaltej", href: "/search?city=Ahmedabad&q=Thaltej" },
+        { label: "Property in Naranpura", href: "/search?city=Ahmedabad&q=Naranpura" },
+        { label: "Property in Satellite", href: "/search?city=Ahmedabad&q=Satellite" },
+        { label: "Property in Ghatlodia", href: "/search?city=Ahmedabad&q=Ghatlodia" },
+        { label: "Property in CG Road", href: "/search?city=Ahmedabad&q=CG+Road" },
       ],
     },
     {
-      title: "Popular 3 BHK Searches",
+      title: "Bungalow Searches",
       links: [
-        { label: "3 BHK in Gurugram", href: "/search?city=Gurugram&bhk=3+BHK" },
-        { label: "3 BHK in Noida", href: "/search?city=Noida&bhk=3+BHK" },
-        { label: "3 BHK in Bengaluru", href: "/search?city=Bengaluru&bhk=3+BHK" },
-        { label: "3 BHK in Mumbai", href: "/search?city=Mumbai&bhk=3+BHK" },
-        { label: "3 BHK Ready to Move", href: "/search?bhk=3+BHK&possession=Ready+to+Move" },
-        { label: "3 BHK Under Construction", href: "/search?bhk=3+BHK&possession=Under+Construction" },
-      ],
-    },
-    {
-      title: "Popular Residential Searches",
-      links: [
-        { label: "Property for Sale", href: "/search?listing_type=sale" },
-        { label: "Property for Rent", href: "/search?listing_type=rent" },
-        { label: "Apartments for Sale", href: "/search?propertyType=Apartment&listing_type=sale" },
-        { label: "Villas for Sale", href: "/search?propertyType=Villa&listing_type=sale" },
-        { label: "Ready to Move Flats", href: "/search?possession=Ready+to+Move" },
-        { label: "New Launch Projects", href: "/search?possession=New+Launch" },
-        { label: "Under Construction Flats", href: "/search?possession=Under+Construction" },
-        { label: "Residential Projects", href: "/projects" },
-      ],
-    },
-    {
-      title: "Popular Luxury Searches",
-      links: [
-        { label: "Luxury Apartments in Gurugram", href: "/search?city=Gurugram&propertyType=Apartment" },
-        { label: "Luxury Apartments in Mumbai", href: "/search?city=Mumbai&propertyType=Apartment" },
-        { label: "Luxury Villas in Bengaluru", href: "/search?city=Bengaluru&propertyType=Villa" },
-        { label: "Penthouses in Noida", href: "/search?city=Noida" },
-        { label: "4 BHK Luxury Flats", href: "/search?bhk=4+BHK" },
-        { label: "5 BHK Luxury Flats", href: "/search?bhk=5%2B+BHK" },
+        { label: "Bungalows in Ahmedabad", href: "/search?city=Ahmedabad&propertyType=Villa" },
+        { label: "Bungalows in Science City", href: "/search?city=Ahmedabad&locality=science-city&propertyType=Villa" },
+        { label: "Bungalows in Bhadaj", href: "/search?city=Ahmedabad&q=Bhadaj&propertyType=Villa" },
+        { label: "Bungalows in Thaltej", href: "/search?city=Ahmedabad&q=Thaltej&propertyType=Villa" },
+        { label: "Furnished Bungalows", href: "/search?city=Ahmedabad&propertyType=Villa&furnishing=Fully+Furnished" },
+        { label: "3 BHK Bungalows", href: "/search?city=Ahmedabad&bhk=3+BHK&propertyType=Villa" },
+        { label: "4 BHK Bungalows", href: "/search?city=Ahmedabad&bhk=4+BHK&propertyType=Villa" },
+        { label: "5 BHK Bungalows", href: "/search?city=Ahmedabad&bhk=5%2B+BHK&propertyType=Villa" },
       ],
     },
     {
       title: "Ready To Move Searches",
       links: [
-        { label: "2 BHK Ready to Move", href: "/search?bhk=2+BHK&possession=Ready+to+Move" },
-        { label: "3 BHK Ready to Move", href: "/search?bhk=3+BHK&possession=Ready+to+Move" },
-        { label: "4 BHK Ready to Move", href: "/search?bhk=4+BHK&possession=Ready+to+Move" },
-        { label: "Ready to Move in Gurugram", href: "/search?city=Gurugram&possession=Ready+to+Move" },
-        { label: "Ready to Move in Bengaluru", href: "/search?city=Bengaluru&possession=Ready+to+Move" },
-        { label: "Ready to Move in Mumbai", href: "/search?city=Mumbai&possession=Ready+to+Move" },
-      ],
-    },
-    {
-      title: "New Launch Searches",
-      links: [
-        { label: "New Launch in Gurugram", href: "/search?city=Gurugram&possession=New+Launch" },
-        { label: "New Launch in Noida", href: "/search?city=Noida&possession=New+Launch" },
-        { label: "New Launch in Bengaluru", href: "/search?city=Bengaluru&possession=New+Launch" },
-        { label: "New Launch in Mumbai", href: "/search?city=Mumbai&possession=New+Launch" },
-        { label: "New Launch Projects", href: "/projects" },
+        { label: "Ready to Move in Ahmedabad", href: "/search?city=Ahmedabad&possession=Ready+to+Move" },
+        { label: "Ready Offices in Bodakdev", href: "/search?city=Ahmedabad&locality=bodakdev&possession=Ready+to+Move" },
+        { label: "Ready Offices on Ashram Road", href: "/search?city=Ahmedabad&locality=ashram-road&possession=Ready+to+Move" },
+        { label: "Ready Bungalows in Ahmedabad", href: "/search?city=Ahmedabad&propertyType=Villa&possession=Ready+to+Move" },
+        { label: "Ready Flats in Ahmedabad", href: "/search?city=Ahmedabad&propertyType=Apartment&possession=Ready+to+Move" },
       ],
     },
     {
       title: "List Property",
       links: [
-        { label: "List Property for Sale", href: "/signup" },
-        { label: "Sell Property Online", href: "/signup" },
+        { label: "List Office for Rent", href: "/signup" },
+        { label: "List Bungalow for Sale", href: "/signup" },
         { label: "Post Property Free", href: "/signup" },
+        { label: "Sell Property in Ahmedabad", href: "/signup" },
         { label: "Advertise Property", href: "/signup" },
-        { label: "Sell Without Broker", href: "/signup" },
       ],
     },
     {
       title: "Trending Searches",
       links: [
-        { label: "Property for sale near me", href: "/search?listing_type=sale" },
-        { label: "Apartments for sale near me", href: "/search?propertyType=Apartment&listing_type=sale" },
-        { label: "Ready to move flats near me", href: "/search?possession=Ready+to+Move" },
-        { label: "New launch properties near me", href: "/search?possession=New+Launch" },
-        { label: "Luxury property for sale", href: "/search?listing_type=sale" },
-        { label: "Flats under ₹1 Cr near me", href: "/search?maxPrice=10000000" },
-        { label: "Property consultant near me", href: "/agents" },
+        { label: "Office space for rent in Ahmedabad", href: "/search?city=Ahmedabad&propertyType=Office+Space&listing_type=rent" },
+        { label: "Bungalow for sale in Ahmedabad", href: "/search?city=Ahmedabad&propertyType=Villa&listing_type=sale" },
+        { label: "Furnished office in Bodakdev", href: "/search?city=Ahmedabad&locality=bodakdev&furnishing=Fully+Furnished" },
+        { label: "Office in GIFT City", href: "/search?city=Ahmedabad&q=GIFT+City" },
+        { label: "Luxury bungalow Science City", href: "/search?city=Ahmedabad&locality=science-city&propertyType=Villa" },
+        { label: "Property consultant Ahmedabad", href: "/agents" },
+        { label: "Commercial property Ahmedabad", href: "/commercial" },
       ],
     },
   ];
@@ -206,7 +178,7 @@ export default function HomePage() {
         {/* Overlay content */}
         <div className="relative z-10 flex flex-col items-center justify-center px-4 py-16 text-center md:py-24">
           <h1 className="mb-8 text-3xl font-bold text-white md:text-5xl">
-            Explore 1000+ Verified Properties
+            Explore 500+ Verified Properties in Ahmedabad
           </h1>
           <div className="w-full max-w-5xl">
             <HeroSearch />
