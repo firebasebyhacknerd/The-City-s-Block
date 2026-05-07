@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { headers } from "next/headers";
 import { getSession } from "@/lib/auth";
 import { getAdminStatsAction } from "@/app/actions/admin";
 import { signOutAction } from "@/app/actions/auth";
@@ -8,7 +7,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { Button } from "@/components/ui/button";
 import {
   LogOut, ListChecks, Users, MessageSquare,
-  Building2, TrendingUp, Clock, CheckCircle2
+  Building2, Clock, CheckCircle2
 } from "lucide-react";
 
 export const metadata = { title: "Admin Console | The City's Blocks" };
@@ -19,8 +18,6 @@ export default async function AdminPage() {
   if (session.role !== "admin") redirect("/dashboard");
 
   const stats = await getAdminStatsAction();
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") || "/admin";
 
   const statCards = [
     { label: "Active Listings", value: stats.activeListings, icon: CheckCircle2, color: "text-green-600", bg: "bg-green-50" },
