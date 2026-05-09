@@ -6,14 +6,7 @@ import { ProfileEditForm } from "@/components/dashboard/ProfileEditForm";
 import { PasswordChangeForm } from "@/components/dashboard/PasswordChangeForm";
 import { Badge } from "@/components/ui/badge";
 
-const dashboardNav = [
-  { label: "Overview", href: "/dashboard" },
-  { label: "Listings", href: "/dashboard/listings" },
-  { label: "Leads", href: "/dashboard/leads" },
-  { label: "Saved searches", href: "/dashboard/saved-searches" },
-  { label: "Profile", href: "/dashboard/profile" },
-  { label: "New listing", href: "/dashboard/new-listing" },
-];
+export const metadata = { title: "Profile | Dashboard" };
 
 export default async function DashboardProfilePage() {
   const session = await getSession();
@@ -21,19 +14,15 @@ export default async function DashboardProfilePage() {
 
   const rows = await sql`SELECT * FROM users WHERE id = ${session.id} LIMIT 1`;
   const user = rows[0];
-
   if (!user) redirect("/login");
+
+  const role = session.role as "buyer" | "agent" | "owner";
 
   return (
     <main className="container-shell py-10 pb-16">
-      <PanelShell
-        title="Business Dashboard"
-        description="Monitor listing performance, stay on top of new buyer interest, and keep your portfolio market-ready."
-        items={dashboardNav}
-        activeHref="/dashboard/profile"
-      >
+      <PanelShell role={role} currentPath="/dashboard/profile">
         <div className="space-y-6">
-          {/* Account info (read-only) */}
+          {/* Account info */}
           <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-950 mb-4">Account info</h2>
             <div className="grid gap-3 text-sm text-slate-600 md:grid-cols-2">
@@ -41,14 +30,16 @@ export default async function DashboardProfilePage() {
                 <span className="font-medium text-slate-800">Email</span>
                 <p className="mt-0.5">{user.email}</p>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-4">
                 <div>
                   <span className="font-medium text-slate-800">Role</span>
-                  <p className="mt-0.5 capitalize">{user.role}</p>
+                  <p className="mt-1">
+                    <Badge variant="secondary" className="capitalize">{user.role}</Badge>
+                  </p>
                 </div>
                 <div>
                   <span className="font-medium text-slate-800">Verified</span>
-                  <p className="mt-0.5">
+                  <p className="mt-1">
                     {user.verified ? (
                       <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Verified</Badge>
                     ) : (
@@ -64,7 +55,7 @@ export default async function DashboardProfilePage() {
           <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-950 mb-1">Edit profile</h2>
             <p className="text-sm text-slate-500 mb-5">
-              Update your name, contact details, and bio visible to buyers.
+              Update your name, contact details, and bio.
             </p>
             <ProfileEditForm
               user={{

@@ -2,17 +2,19 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import {
   LayoutDashboard, ListChecks, Users, MessageSquare,
-  Building2, MapPin, Globe, ChevronRight
+  Building2, MapPin, Globe, ChevronRight, FolderKanban
 } from "lucide-react";
+import { AdminMobileNav } from "@/components/admin/AdminMobileNav";
 
 const navItems = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin/listings", label: "Listings", icon: ListChecks },
+  { href: "/admin",             label: "Dashboard",     icon: LayoutDashboard, exact: true },
+  { href: "/admin/listings",    label: "Listings",      icon: ListChecks },
+  { href: "/admin/projects",    label: "Projects",      icon: FolderKanban },
   { href: "/admin/mock-listings", label: "Property Data", icon: Building2 },
-  { href: "/admin/users", label: "Users", icon: Users },
-  { href: "/admin/inquiries", label: "Inquiries", icon: MessageSquare },
-  { href: "/admin/localities", label: "Localities", icon: MapPin },
-  { href: "/", label: "View Site", icon: Globe },
+  { href: "/admin/users",       label: "Users",         icon: Users },
+  { href: "/admin/inquiries",   label: "Inquiries",     icon: MessageSquare },
+  { href: "/admin/localities",  label: "Localities",    icon: MapPin },
+  { href: "/",                  label: "View Site",     icon: Globe },
 ];
 
 interface AdminShellProps {
@@ -20,12 +22,14 @@ interface AdminShellProps {
   currentPath: string;
   title: string;
   subtitle?: string;
+  /** Optional slot for the notification bell (passed from page RSC) */
+  actions?: ReactNode;
 }
 
-export function AdminShell({ children, currentPath, title, subtitle }: AdminShellProps) {
+export function AdminShell({ children, currentPath, title, subtitle, actions }: AdminShellProps) {
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
+      {/* Desktop sidebar */}
       <aside className="hidden w-60 shrink-0 border-r border-gray-200 bg-white lg:flex lg:flex-col">
         {/* Logo */}
         <div className="flex items-center gap-2.5 border-b border-gray-100 px-5 py-4">
@@ -74,15 +78,23 @@ export function AdminShell({ children, currentPath, title, subtitle }: AdminShel
       {/* Main */}
       <div className="flex-1 overflow-auto">
         {/* Top bar */}
-        <div className="sticky top-0 z-10 border-b border-gray-200 bg-white px-6 py-4">
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">{title}</h1>
-            {subtitle && <p className="mt-0.5 text-sm text-gray-500">{subtitle}</p>}
+        <div className="sticky top-0 z-10 border-b border-gray-200 bg-white px-4 py-3 lg:px-6 lg:py-4">
+          <div className="flex items-center gap-3">
+            {/* Mobile hamburger */}
+            <AdminMobileNav navItems={navItems} currentPath={currentPath} />
+
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl font-bold text-gray-900 truncate">{title}</h1>
+              {subtitle && <p className="mt-0.5 text-sm text-gray-500 truncate">{subtitle}</p>}
+            </div>
+
+            {/* Actions slot (notification bell, etc.) */}
+            {actions && <div className="flex items-center gap-2 shrink-0">{actions}</div>}
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6">{children}</div>
+        <div className="p-4 lg:p-6">{children}</div>
       </div>
     </div>
   );

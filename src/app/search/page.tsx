@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Search, SlidersHorizontal, MapPin, BedDouble, Maximize2, CheckCircle } from "lucide-react";
 import { getPublicListingsAction } from "@/app/actions/listings";
 import { listings as mockListings, getLocality } from "@/lib/portal";
+import { getSession } from "@/lib/auth";
+import { SaveSearchButton } from "@/components/portal/SaveSearchButton";
 
 export const metadata = {
   title: "Search Property | The City's Blocks",
@@ -41,6 +43,10 @@ export default async function SearchPage({ searchParams }: Props) {
   const maxPrice = get("maxPrice") ? Number(get("maxPrice")) : Infinity;
   const bhk = get("bhk");
   const locality = get("locality");
+
+  const session = await getSession();
+  const activeFilters = { q, city, listing_type: listingType, asset_class: assetClass, property_type: propertyType, bhk };
+  const hasFilters = !!(q || city || listingType || assetClass || propertyType || furnishing || possession || bhk || locality || minPrice || maxPrice);
 
   // DB results
   let dbResults: any[] = [];
@@ -96,8 +102,6 @@ export default async function SearchPage({ searchParams }: Props) {
     ...dbResults.filter((d) => !mockResults.find((m) => m.title === d.title)),
   ];
 
-  const hasFilters = !!(q || city || listingType || assetClass || propertyType || furnishing || possession || bhk || locality || minPrice || maxPrice);
-
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Top search bar */}
@@ -120,6 +124,9 @@ export default async function SearchPage({ searchParams }: Props) {
               <Link href="/search" className="rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-500 hover:bg-gray-50">
                 Clear
               </Link>
+            )}
+            {session && hasFilters && (
+              <SaveSearchButton filters={activeFilters} />
             )}
           </form>
         </div>

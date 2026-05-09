@@ -3,7 +3,9 @@ import Link from "next/link";
 import { getSession } from "@/lib/auth";
 import { getAdminStatsAction } from "@/app/actions/admin";
 import { signOutAction } from "@/app/actions/auth";
+import { getMyNotificationsAction, getUnreadCountAction } from "@/app/actions/notifications";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { NotificationBell } from "@/components/shared/NotificationBell";
 import { Button } from "@/components/ui/button";
 import {
   LogOut, ListChecks, Users, MessageSquare,
@@ -17,7 +19,11 @@ export default async function AdminPage() {
   if (!session) redirect("/login");
   if (session.role !== "admin") redirect("/dashboard");
 
-  const stats = await getAdminStatsAction();
+  const [stats, notifications, unreadCount] = await Promise.all([
+    getAdminStatsAction(),
+    getMyNotificationsAction(),
+    getUnreadCountAction(),
+  ]);
 
   const statCards = [
     { label: "Active Listings", value: stats.activeListings, icon: CheckCircle2, color: "text-green-600", bg: "bg-green-50" },
@@ -27,8 +33,18 @@ export default async function AdminPage() {
   ];
 
   return (
-    <AdminShell title="Dashboard" subtitle="Overview of your platform activity" currentPath="/admin">
-      {/* Sign out */}
+    <AdminShell
+      title="Dashboard"
+      subtitle="Overview of your platform activity"
+      currentPath="/admin"
+      actions={
+        <NotificationBell
+          initialNotifications={notifications}
+          initialUnreadCount={unreadCount}
+          isAdmin
+        />
+      }
+    >      {/* Sign out */}
       <div className="mb-6 flex justify-end">
         <form action={signOutAction}>
           <Button variant="outline" size="sm" className="rounded-full gap-2 text-gray-600">
