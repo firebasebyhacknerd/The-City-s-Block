@@ -49,8 +49,8 @@ export function NavbarClient({ session }: NavbarClientProps) {
             </svg>
           </div>
           <div className="hidden sm:block leading-tight">
-            <div className="font-bold text-[#1B4332] text-base">The City's Blocks</div>
-            <div className="text-[10px] font-semibold text-[#C9A84C] uppercase tracking-wide">Trusted Advisory</div>
+            <div className="font-bold text-[#1B4332] text-lg tracking-tight">The City's Block</div>
+            <div className="text-[10px] font-bold text-[#C9A84C] uppercase tracking-[0.2em]">Trusted Advisory</div>
           </div>
         </Link>
 
@@ -62,7 +62,7 @@ export function NavbarClient({ session }: NavbarClientProps) {
               <Link
                 key={item.label}
                 href={item.href}
-                className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:text-red-600"
+                className="flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-gray-700 transition-all hover:bg-[#1B4332]/5 hover:text-[#1B4332]"
               >
                 <Icon className="h-4 w-4" />
                 {item.label}
@@ -81,8 +81,8 @@ export function NavbarClient({ session }: NavbarClientProps) {
                   <Shield className="h-4 w-4" /> Admin
                 </Link>
               )}
-              {(session.role === "owner" || session.role === "agent") && (
-                <Link href="/dashboard/new-listing" className="flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-red-700">
+              {(session.role === "owner" || session.role === "agent" || session.role === "builder") && (
+                <Link href="/dashboard/new-listing" className="flex items-center gap-1.5 rounded-full bg-[#1B4332] px-5 py-2 text-sm font-bold text-white transition-all hover:bg-[#1B4332]/90 hover:shadow-lg">
                   <PlusCircle className="h-4 w-4" /> Post FREE
                 </Link>
               )}
@@ -96,10 +96,10 @@ export function NavbarClient({ session }: NavbarClientProps) {
             </>
           ) : (
             <>
-              <Link href="/signup" className="flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-red-700">
+              <Link href="/signup" className="flex items-center gap-1.5 rounded-full bg-[#1B4332] px-5 py-2 text-sm font-bold text-white transition-all hover:bg-[#1B4332]/90 hover:shadow-lg active:scale-95">
                 <PlusCircle className="h-4 w-4" /> Post FREE
               </Link>
-              <Link href="/login" className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+              <Link href="/login" className="flex items-center gap-1.5 rounded-full border border-gray-200 px-5 py-2 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-50 hover:border-[#C9A84C] hover:text-[#1B4332]">
                 <LogIn className="h-4 w-4" /> Sign in
               </Link>
             </>
@@ -151,15 +151,15 @@ export function NavbarClient({ session }: NavbarClientProps) {
             })}
             <div className="mt-3 border-t border-gray-100 pt-3 flex flex-col gap-2">
               {session ? (
-                <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-lg bg-red-600 px-3 py-2.5 text-sm font-semibold text-white">
+                <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-full bg-[#1B4332] px-4 py-3 text-sm font-bold text-white">
                   <LayoutDashboard className="h-4 w-4" /> Dashboard
                 </Link>
               ) : (
                 <>
-                  <Link href="/signup" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-lg bg-red-600 px-3 py-2.5 text-sm font-semibold text-white">
+                  <Link href="/signup" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-full bg-[#1B4332] px-4 py-3 text-sm font-bold text-white">
                     <PlusCircle className="h-4 w-4" /> Post FREE
                   </Link>
-                  <Link href="/login" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2.5 text-sm font-medium text-gray-700">
+                  <Link href="/login" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-full border border-gray-200 px-4 py-3 text-sm font-bold text-gray-700">
                     <LogIn className="h-4 w-4" /> Sign in
                   </Link>
                 </>

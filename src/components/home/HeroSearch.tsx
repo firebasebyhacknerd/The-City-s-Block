@@ -54,8 +54,8 @@ export function HeroSearch() {
         className="flex flex-col gap-0 overflow-hidden rounded-xl bg-white shadow-2xl md:flex-row"
       >
         {/* Location */}
-        <div className="flex flex-1 items-center gap-2 border-b border-gray-100 px-4 py-3 md:border-b-0 md:border-r">
-          <MapPin className="h-4 w-4 shrink-0 text-red-500" />
+        <div className="flex flex-1 items-center gap-2 border-b border-gray-100 px-5 py-4 md:border-b-0 md:border-r">
+          <MapPin className="h-4 w-4 shrink-0 text-[#C9A84C]" />
           <input
             type="text"
             placeholder="Location"
@@ -128,9 +128,9 @@ export function HeroSearch() {
         {/* Search button */}
         <button
           type="submit"
-          className="flex items-center justify-center gap-2 bg-red-600 px-8 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+          className="flex items-center justify-center gap-2 bg-[#1B4332] px-10 py-4 text-sm font-bold text-white transition-all hover:bg-[#1B4332]/90 hover:shadow-inner active:scale-95"
         >
-          <Search className="h-4 w-4" />
+          <Search className="h-4 w-4 text-[#C9A84C]" />
           Search
         </button>
       </form>

@@ -4,26 +4,33 @@
 
 @layer base {
   :root {
-    --background: 36 100% 99%;
-    --foreground: 222 47% 11%;
+    /* Brand Colors: Deep Emerald (#1B4332) and Metallic Gold (#C9A84C) */
+    --background: 150 10% 98%;
+    --foreground: 153 42% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 153 42% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 222 47% 11%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 38 92% 55%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 199 89% 48%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 84.2% 60.2%;
+    --popover-foreground: 153 42% 12%;
+    
+    /* Primary: Deep Emerald */
+    --primary: 153 42% 18%;
+    --primary-foreground: 44 53% 98%;
+    
+    /* Secondary: Metallic Gold */
+    --secondary: 44 53% 54%;
+    --secondary-foreground: 153 42% 12%;
+    
+    --muted: 153 10% 94%;
+    --muted-foreground: 153 20% 40%;
+    --accent: 44 53% 54%;
+    --accent-foreground: 153 42% 12%;
+    
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 222 47% 11%;
-    --radius: 1rem;
+    --border: 153 10% 90%;
+    --input: 153 10% 90%;
+    --ring: 153 42% 18%;
+    --radius: 1.25rem;
   }
 
   * {

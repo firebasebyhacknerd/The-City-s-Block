@@ -213,20 +213,36 @@ export default function HomePage() {
   return (
     <main className="bg-white">
       {/* ── 1. Hero Banner ── */}
-      <section className="relative min-h-[420px] overflow-hidden bg-gray-900 md:min-h-[500px]">
+      <section className="relative min-h-[500px] overflow-hidden bg-[#1B4332] md:min-h-[600px]">
         <Image
-          src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1920&q=80"
-          alt="Hero banner"
+          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80"
+          alt="Luxury Real Estate"
           fill
           priority
-          className="object-cover opacity-40"
+          className="object-cover opacity-60"
         />
-        <div className="relative z-10 flex flex-col items-center justify-center px-4 py-16 text-center md:py-24">
-          <h1 className="mb-8 text-3xl font-bold text-white md:text-5xl">
-            Explore 500+ Verified Properties in Ahmedabad
+        {/* Luxurious Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1B4332]/80 via-[#1B4332]/40 to-black/80" />
+        
+        <div className="relative z-10 flex flex-col items-center justify-center px-4 py-20 text-center md:py-32">
+          <div className="mb-4 inline-block rounded-full bg-[#C9A84C]/20 px-4 py-1 text-xs font-bold uppercase tracking-[0.3em] text-[#C9A84C] backdrop-blur-md border border-[#C9A84C]/30">
+            Trusted Real Estate Advisory
+          </div>
+          <h1 className="mb-8 max-w-4xl text-4xl font-extrabold tracking-tight text-white md:text-6xl">
+            Discover Your <span className="text-[#C9A84C]">Perfect Space</span> in Ahmedabad
           </h1>
-          <div className="w-full max-w-5xl">
+          <div className="w-full max-w-5xl rounded-[32px] bg-white/10 p-2 backdrop-blur-xl border border-white/20 shadow-2xl">
             <HeroSearch />
+          </div>
+          <div className="mt-8 flex items-center gap-6 text-sm font-medium text-white/70">
+            <div className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-[#C9A84C]" />
+              500+ Verified Properties
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-[#C9A84C]" />
+              Expert Guidance
+            </div>
           </div>
         </div>
       </section>

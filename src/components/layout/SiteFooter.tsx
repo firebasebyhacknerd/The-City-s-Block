@@ -40,8 +40,8 @@ export function SiteFooter() {
                 </svg>
               </div>
               <div className="leading-tight">
-                <div className="font-bold text-[#1B4332] text-base">The City's Blocks</div>
-                <div className="text-[10px] font-semibold text-[#C9A84C] uppercase tracking-wide">Trusted Advisory</div>
+                <div className="font-bold text-[#1B4332] text-lg tracking-tight">The City's Block</div>
+                <div className="text-[10px] font-bold text-[#C9A84C] uppercase tracking-[0.2em]">Trusted Advisory</div>
               </div>
             </div>
             <p className="max-w-md text-sm leading-6 text-gray-500">
@@ -57,16 +57,20 @@ export function SiteFooter() {
             <h3 className="text-sm font-semibold text-gray-800">Connect with Us</h3>
             <a
               href="tel:+919998470000"
-              className="flex items-center gap-2 text-sm text-gray-600 hover:text-red-600"
+              className="flex items-center gap-3 text-sm font-medium text-gray-600 transition-all hover:text-[#1B4332]"
             >
-              <Phone className="h-4 w-4 text-red-500" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1B4332]/5 text-[#1B4332]">
+                <Phone className="h-4 w-4" />
+              </div>
               +91 99984 70000
             </a>
             <a
               href="mailto:hello@citysblock.in"
-              className="flex items-center gap-2 text-sm text-gray-600 hover:text-red-600"
+              className="flex items-center gap-3 text-sm font-medium text-gray-600 transition-all hover:text-[#1B4332]"
             >
-              <Mail className="h-4 w-4 text-red-500" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1B4332]/5 text-[#1B4332]">
+                <Mail className="h-4 w-4" />
+              </div>
               hello@citysblock.in
             </a>
 
@@ -79,7 +83,7 @@ export function SiteFooter() {
                     key={label}
                     href={href}
                     aria-label={label}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-500 transition hover:border-red-300 hover:text-red-600"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-100 bg-gray-50 text-gray-500 transition-all hover:border-[#C9A84C] hover:bg-[#C9A84C]/5 hover:text-[#1B4332] hover:shadow-sm"
                   >
                     <Icon className="h-4 w-4" />
                   </a>
@@ -99,7 +103,7 @@ export function SiteFooter() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-xs text-gray-500 transition hover:text-red-600"
+                className="text-xs font-medium text-gray-500 transition hover:text-[#1B4332]"
               >
                 {link.label}
               </Link>

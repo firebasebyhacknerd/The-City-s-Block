@@ -255,11 +255,11 @@ function SearchListingCard({ listing }: { listing: any }) {
           <div className="flex h-full items-center justify-center text-sm text-gray-300">No image</div>
         )}
         <div className="absolute left-3 top-3 flex gap-1.5">
-          <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold text-white ${listing.listing_type === "sale" ? "bg-blue-600" : "bg-green-600"}`}>
+          <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm ${listing.listing_type === "sale" ? "bg-[#1B4332]" : "bg-[#C9A84C]"}`}>
             {listing.listing_type === "sale" ? "For Sale" : "For Rent"}
           </span>
           {listing.verified && (
-            <span className="flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-xs font-semibold text-green-700">
+            <span className="flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[#1B4332] shadow-sm backdrop-blur-sm border border-white/50">
               <CheckCircle className="h-3 w-3" /> Verified
             </span>
           )}
@@ -275,9 +275,9 @@ function SearchListingCard({ listing }: { listing: any }) {
           {listing.bhk && <span className="flex items-center gap-1"><BedDouble className="h-3.5 w-3.5" />{listing.bhk} BHK</span>}
           {listing.area && <span className="flex items-center gap-1"><Maximize2 className="h-3.5 w-3.5" />{Number(listing.area).toLocaleString("en-IN")} sq.ft.</span>}
         </div>
-        <div className="flex items-center justify-between pt-1">
-          <div className="text-base font-bold text-gray-900">{formattedPrice}</div>
-          <div className="text-xs text-gray-400">{listing.property_type}</div>
+        <div className="flex items-center justify-between pt-2 border-t border-gray-50">
+          <div className="text-base font-bold text-[#1B4332]">{formattedPrice}</div>
+          <div className="text-[10px] font-bold uppercase tracking-widest text-[#C9A84C]">{listing.property_type}</div>
         </div>
       </div>
     </Link>
