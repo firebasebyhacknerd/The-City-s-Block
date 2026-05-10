@@ -11,6 +11,8 @@ import { FeaturedListings, type HomepageListing } from "@/components/home/Featur
 import { localities, projects, getLocality, getProjectBuilder } from "@/lib/portal";
 import { getHomepageListingsAction } from "@/app/actions/listings";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "The City's Block | Buy, Rent & Discover Property Across India",
   description:

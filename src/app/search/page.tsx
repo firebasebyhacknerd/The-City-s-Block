@@ -6,6 +6,8 @@ import { listings as mockListings, getLocality } from "@/lib/portal";
 import { getSession } from "@/lib/auth";
 import { SaveSearchButton } from "@/components/portal/SaveSearchButton";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Search Property | The City's Block",
   description: "Browse verified offices, bungalows, and residential properties in Ahmedabad.",
