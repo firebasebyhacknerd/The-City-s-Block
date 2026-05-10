@@ -50,58 +50,18 @@ export default async function SearchPage({ searchParams }: Props) {
   const hasFilters = !!(q || city || listingType || assetClass || propertyType || furnishing || possession || bhk || locality || minPrice || maxPrice);
 
   // DB results
-  let dbResults: any[] = [];
+  let allResults: any[] = [];
   try {
-    dbResults = await getPublicListingsAction({
+    allResults = await getPublicListingsAction({
       city: city || undefined,
       listing_type: listingType || undefined,
       asset_class: assetClass || undefined,
       property_type: propertyType || undefined,
       q: q || undefined,
     });
-  } catch {}
-
-  // Mock results
-  const mockResults = mockListings
-    .filter((l) => l.status === "active")
-    .filter((l) => !city || l.city.toLowerCase() === city.toLowerCase())
-    .filter((l) => !listingType || l.listingType === listingType)
-    .filter((l) => !assetClass || l.assetClass === assetClass)
-    .filter((l) => !propertyType || l.propertyType === propertyType)
-    .filter((l) => !furnishing || l.furnishing === furnishing)
-    .filter((l) => !possession || l.possessionStatus === possession)
-    .filter((l) => !bhk || (l.bhk !== null && l.bhk === Number(bhk.split(" ")[0])))
-    .filter((l) => !locality || l.localitySlug === locality)
-    .filter((l) => !minPrice || l.price >= minPrice)
-    .filter((l) => maxPrice === Infinity || l.price <= maxPrice)
-    .filter((l) => {
-      if (!q) return true;
-      const loc = getLocality(l.localitySlug)?.displayName ?? "";
-      return [l.title, l.description, l.city, loc, l.propertyType, l.address]
-        .join(" ").toLowerCase().includes(q);
-    })
-    .map((l) => ({
-      id: l.id,
-      title: l.title,
-      city: l.city,
-      locality: getLocality(l.localitySlug)?.displayName ?? "",
-      price: l.price,
-      price_unit: l.priceUnit,
-      area: l.area,
-      bhk: l.bhk,
-      bathrooms: l.bathrooms,
-      property_type: l.propertyType,
-      listing_type: l.listingType,
-      verified: l.verified,
-      featured: l.featured,
-      images: l.images,
-      isMock: true,
-    }));
-
-  const allResults = [
-    ...mockResults,
-    ...dbResults.filter((d) => !mockResults.find((m) => m.title === d.title)),
-  ];
+  } catch (error) {
+    console.error("Search fetch error:", error);
+  }
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -237,7 +197,7 @@ function FilterGroup({ label, children }: { label: string; children: React.React
 function SearchListingCard({ listing }: { listing: any }) {
   const price = Number(listing.price);
   const formattedPrice = formatPrice(price, listing.price_unit);
-  const href = listing.isMock ? `/property/${listing.id}` : `/listings/${listing.id}`;
+  const href = `/listings/${listing.id}`;
 
   return (
     <Link href={href} className="group block overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md">

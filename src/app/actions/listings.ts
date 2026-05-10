@@ -350,9 +350,10 @@ export async function updateInquiryStatusAction(id: number, status: string) {
 export async function getHomepageListingsAction(): Promise<{
   featured: any[];
   commercial: any[];
+  bungalows: any[];
   stats: { activeListings: number; cities: number };
 }> {
-  const [featuredRows, commercialRows, statsRows] = await Promise.all([
+  const [featuredRows, commercialRows, bungalowRows, statsRows] = await Promise.all([
     sql`
       SELECT * FROM listings
       WHERE status = 'active' AND featured = true
@@ -361,9 +362,15 @@ export async function getHomepageListingsAction(): Promise<{
     `,
     sql`
       SELECT * FROM listings
-      WHERE status = 'active' AND asset_class = 'commercial'
+      WHERE status = 'active' AND property_type = 'Office Space'
       ORDER BY created_at DESC
-      LIMIT 2
+      LIMIT 8
+    `,
+    sql`
+      SELECT * FROM listings
+      WHERE status = 'active' AND property_type = 'Villa'
+      ORDER BY created_at DESC
+      LIMIT 4
     `,
     sql`
       SELECT
@@ -378,6 +385,7 @@ export async function getHomepageListingsAction(): Promise<{
   return {
     featured: featuredRows as any[],
     commercial: commercialRows as any[],
+    bungalows: bungalowRows as any[],
     stats: {
       activeListings: Number(statsRow.activeListings ?? 0),
       cities: Number(statsRow.cities ?? 0),

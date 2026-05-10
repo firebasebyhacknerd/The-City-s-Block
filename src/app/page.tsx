@@ -8,7 +8,8 @@ import { LocalityTabs } from "@/components/home/LocalityTabs";
 import { PropertyLinksSection } from "@/components/home/PropertyLinksSection";
 import { FAQSection } from "@/components/home/FAQSection";
 import { FeaturedListings, type HomepageListing } from "@/components/home/FeaturedListings";
-import { projects, localities, listings, getLocality, getProjectBuilder } from "@/lib/portal";
+import { localities, projects, getLocality, getProjectBuilder } from "@/lib/portal";
+import { getHomepageListingsAction } from "@/app/actions/listings";
 
 export const metadata = {
   title: "The City's Block | Buy, Rent & Discover Property Across India",
@@ -16,51 +17,23 @@ export const metadata = {
     "Find verified homes, new launches, and commercial spaces across India's top property markets with expert-backed guidance.",
 };
 
-// ── data helpers ──────────────────────────────────────────────────────────────
-
-// ── listings helpers ──────────────────────────────────────────────────────────
-
-function toHomepageListing(l: typeof listings[0]): HomepageListing {
-  const loc = getLocality(l.localitySlug);
+function dbToListing(l: any): HomepageListing {
   return {
-    id: l.id,
+    id: String(l.id),
     title: l.title,
     city: l.city,
-    locality: loc?.displayName ?? l.localitySlug,
-    price: l.price,
-    priceUnit: l.priceUnit,
+    locality: l.locality,
+    price: Number(l.price),
+    priceUnit: l.price_unit,
     area: l.area,
     bhk: l.bhk,
     bathrooms: l.bathrooms,
-    propertyType: l.propertyType,
-    listingType: l.listingType,
+    propertyType: l.property_type,
+    listingType: l.listing_type,
     verified: l.verified,
     images: l.images,
   };
 }
-
-function buildOfficeListings(): HomepageListing[] {
-  return listings
-    .filter((l) => l.propertyType === "Office Space" && l.status === "active")
-    .slice(0, 8)
-    .map(toHomepageListing);
-}
-
-function buildBungalowListings(): HomepageListing[] {
-  return listings
-    .filter((l) => l.propertyType === "Villa" && l.status === "active")
-    .slice(0, 4)
-    .map(toHomepageListing);
-}
-
-function buildFeaturedListings(): HomepageListing[] {
-  return listings
-    .filter((l) => l.featured && l.status === "active")
-    .slice(0, 4)
-    .map(toHomepageListing);
-}
-
-// ── projects helpers ──────────────────────────────────────────────────────────
 
 function buildTrendingProjects() {
   return projects.map((p) => {
@@ -200,15 +173,16 @@ function buildPropertyLinks() {
   ];
 }
 
-// ── page ──────────────────────────────────────────────────────────────────────
+export default async function HomePage() {
+  const { featured, commercial, bungalows } = await getHomepageListingsAction();
 
-export default function HomePage() {
+  const featuredListings = featured.map(dbToListing);
+  const officeListings = commercial.map(dbToListing);
+  const bungalowListings = bungalows.map(dbToListing);
+  
   const trendingProjects = buildTrendingProjects();
   const localityTabs = buildLocalityTabs();
   const propertyLinks = buildPropertyLinks();
-  const officeListings = buildOfficeListings();
-  const bungalowListings = buildBungalowListings();
-  const featuredListings = buildFeaturedListings();
 
   return (
     <main className="bg-white">
@@ -221,7 +195,6 @@ export default function HomePage() {
           priority
           className="object-cover opacity-60"
         />
-        {/* Luxurious Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#1B4332]/80 via-[#1B4332]/40 to-black/80" />
         
         <div className="relative z-10 flex flex-col items-center justify-center px-4 py-20 text-center md:py-32">
@@ -247,10 +220,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 2. Find Your Next Home ── */}
       <FindYourHome />
 
-      {/* ── 3. Featured Listings ── */}
       {featuredListings.length > 0 && (
         <FeaturedListings
           title="Featured Properties"
@@ -259,7 +230,6 @@ export default function HomePage() {
         />
       )}
 
-      {/* ── 4. Office Spaces ── */}
       {officeListings.length > 0 && (
         <section className="bg-gray-50">
           <FeaturedListings
@@ -270,7 +240,6 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* ── 5. Bungalows for Sale ── */}
       {bungalowListings.length > 0 && (
         <FeaturedListings
           title="Bungalows for Sale – Ahmedabad"
@@ -279,13 +248,10 @@ export default function HomePage() {
         />
       )}
 
-      {/* ── 6. Trending Projects ── */}
       <TrendingProjects projects={trendingProjects} />
 
-      {/* ── 7. Promo Banner ── */}
       <PromoBanner />
 
-      {/* ── 8. Explore by Localities ── */}
       <section className="bg-white py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4">
           <h2 className="mb-6 text-2xl font-bold text-gray-900">
@@ -295,7 +261,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 9. Property Options ── */}
       <section className="bg-gray-50 py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4">
           <h2 className="mb-8 text-2xl font-bold text-gray-900">Property Options</h2>
@@ -303,7 +268,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 10. FAQ ── */}
       <FAQSection />
     </main>
   );
