@@ -36,8 +36,9 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
   const project = await getProjectBySlugAction(slug);
   if (!project) notFound();
 
-  // Mock dummy listing for the inquiry form since we don't have project-specific listing IDs in DB yet
+  // Mock dummy listing and profile for the inquiry form
   const dummyListing = { id: project.id, title: project.name };
+  const dummyProfile = { name: "The City's Block", email: "hello@citysblock.in", phone: "+919998470000" };
 
   return (
     <main className="container-shell py-10 pb-16">
@@ -100,10 +101,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
             </Button>
           </div>
           
-          <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="mb-4 text-lg font-semibold text-slate-950">Send Inquiry</h3>
-            <InquiryForm listing={dummyListing as any} />
-          </div>
+          <InquiryForm listing={dummyListing as any} profile={dummyProfile as any} />
         </div>
       </div>
     </main>
