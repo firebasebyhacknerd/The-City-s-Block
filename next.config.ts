@@ -3,9 +3,12 @@ import type {NextConfig} from 'next';
 const nextConfig: NextConfig = {
   /* config options here */
   typescript: {
-    ignoreBuildErrors: true,
+    // TypeScript passes with zero errors — enforced at build time
+    ignoreBuildErrors: false,
   },
   eslint: {
+    // Known Next.js 15 + ESLint 9 flat-config circular JSON bug in eslint-config-next.
+    // Run `npx eslint src/` manually to lint. Remove this once upstream is fixed.
     ignoreDuringBuilds: true,
   },
   images: {

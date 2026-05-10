@@ -21,7 +21,7 @@ export default async function DashboardPage() {
   if (session.role === "admin") redirect("/admin");
 
   // ── Broker panel ──────────────────────────────────────────────────────────
-  if (session.role === "agent" || session.role === "owner") {
+  if (session.role === "agent" || session.role === "owner" || session.role === "builder") {
     let stats: Awaited<ReturnType<typeof getBrokerStatsAction>> = null;
     let notifications: Awaited<ReturnType<typeof getMyNotificationsAction>> = [];
     let unreadCount = 0;

@@ -11,7 +11,7 @@ export type SessionUser = {
   id: number;
   name: string;
   email: string;
-  role: "buyer" | "owner" | "agent" | "admin";
+  role: "buyer" | "owner" | "agent" | "builder" | "admin";
 };
 
 export async function createSession(user: SessionUser) {

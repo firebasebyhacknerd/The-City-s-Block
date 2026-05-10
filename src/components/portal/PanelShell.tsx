@@ -7,7 +7,7 @@ import {
 
 // ─── Role-based nav configs ───────────────────────────────────────────────────
 
-const BROKER_NAV = (role: "agent" | "owner") => [
+const BROKER_NAV = (role: "agent" | "owner" | "builder") => [
   { label: "Overview",       href: "/dashboard" },
   { label: "Listings",       href: "/dashboard/listings" },
   { label: "New Listing",    href: "/dashboard/new-listing" },
@@ -26,15 +26,17 @@ const BUYER_NAV = [
 ];
 
 const ROLE_TITLES: Record<string, string> = {
-  agent: "Agent Dashboard",
-  owner: "Owner Dashboard",
-  buyer: "My Dashboard",
+  agent:   "Agent Dashboard",
+  owner:   "Owner Dashboard",
+  builder: "Builder Dashboard",
+  buyer:   "My Dashboard",
 };
 
 const ROLE_DESCRIPTIONS: Record<string, string> = {
-  agent: "Manage your listings, track client inquiries, and grow your portfolio.",
-  owner: "Post and manage your properties, track buyer interest.",
-  buyer: "Track your saved listings, inquiries, and searches.",
+  agent:   "Manage your listings, track client inquiries, and grow your portfolio.",
+  owner:   "Post and manage your properties, track buyer interest.",
+  builder: "Manage your projects and listings, track leads and inquiries.",
+  buyer:   "Track your saved listings, inquiries, and searches.",
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -42,7 +44,7 @@ const ROLE_DESCRIPTIONS: Record<string, string> = {
 interface PanelShellProps {
   children: React.ReactNode;
   // New role-based API
-  role?: "buyer" | "agent" | "owner";
+  role?: "buyer" | "agent" | "owner" | "builder";
   currentPath?: string;
   // Legacy API (kept for backward compat)
   title?: string;
@@ -64,7 +66,7 @@ export function PanelShell({
   const navItems = role
     ? role === "buyer"
       ? BUYER_NAV
-      : BROKER_NAV(role as "agent" | "owner")
+      : BROKER_NAV(role as "agent" | "owner" | "builder")
     : (items ?? []);
 
   const resolvedTitle = title ?? (role ? ROLE_TITLES[role] : "Dashboard");

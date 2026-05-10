@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Search, SlidersHorizontal, MapPin, BedDouble, Maximize2, CheckCircle } from "lucide-react";
 import { getPublicListingsAction } from "@/app/actions/listings";
@@ -6,7 +7,7 @@ import { getSession } from "@/lib/auth";
 import { SaveSearchButton } from "@/components/portal/SaveSearchButton";
 
 export const metadata = {
-  title: "Search Property | The City's Blocks",
+  title: "Search Property | The City's Block",
   description: "Browse verified offices, bungalows, and residential properties in Ahmedabad.",
 };
 
@@ -242,8 +243,14 @@ function SearchListingCard({ listing }: { listing: any }) {
     <Link href={href} className="group block overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md">
       <div className="relative h-44 overflow-hidden bg-gray-100">
         {listing.images?.[0] ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={listing.images[0]} alt={listing.title} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+          <Image
+            src={listing.images[0]}
+            alt={listing.title}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            unoptimized={listing.isMock}
+          />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-gray-300">No image</div>
         )}
