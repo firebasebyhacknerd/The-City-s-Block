@@ -6,6 +6,8 @@ import { getListingByIdAction } from "@/app/actions/listings";
 import { InquiryForm } from "@/components/portal/InquiryFormDb";
 import { FavoriteButton } from "@/components/portal/FavoriteButton";
 
+export const dynamic = "force-dynamic";
+
 type Props = { params: Promise<{ id: string }> };
 
 export default async function ListingDetailPage({ params }: Props) {

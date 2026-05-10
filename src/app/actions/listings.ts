@@ -218,26 +218,25 @@ export async function getPublicListingsAction(filters?: {
 
 export async function getListingByIdAction(idOrSlug: string | number) {
   const session = await getSession();
-  const isNumeric = !isNaN(Number(idOrSlug));
+  const searchStr = String(idOrSlug);
 
-  let query;
+  let rows;
   if (session) {
-    query = sql`
+    rows = await sql`
       SELECT l.*, u.name as owner_name, u.phone as owner_phone, u.email as owner_email
       FROM listings l
       JOIN users u ON u.id = l.user_id
-      WHERE ${isNumeric ? sql`l.id = ${Number(idOrSlug)}` : sql`l.slug = ${idOrSlug}`}
+      WHERE l.id::text = ${searchStr} OR l.slug = ${searchStr}
     `;
   } else {
-    query = sql`
+    rows = await sql`
       SELECT l.*, u.name as owner_name
       FROM listings l
       JOIN users u ON u.id = l.user_id
-      WHERE ${isNumeric ? sql`l.id = ${Number(idOrSlug)}` : sql`l.slug = ${idOrSlug}`}
+      WHERE l.id::text = ${searchStr} OR l.slug = ${searchStr}
     `;
   }
 
-  const rows = await query;
   return rows[0] || null;
 }
 
