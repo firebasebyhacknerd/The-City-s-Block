@@ -1,74 +1,71 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Building2, MapPin } from "lucide-react";
-import { PageIntro } from "@/components/portal/PageIntro";
-import { ProjectCard } from "@/components/portal/ProjectCard";
-import { projects as mockProjects } from "@/lib/portal";
-import { getPublicProjectsAction } from "@/app/actions/admin";
+import { MapPin, Building2, CalendarClock, ArrowRight } from "lucide-react";
+import { getProjectsAction } from "@/app/actions/listings";
 
-export const metadata = {
-  title: "New Projects in India | The City's Block",
-  description:
-    "Browse launch-stage and ready projects with pricing clarity, builder context, and brochure-led discovery across India's top property markets.",
-};
+export const dynamic = "force-dynamic";
+
+function formatInr(value: number) {
+  if (value >= 10000000) return `₹${(value / 10000000).toFixed(2)} Cr`;
+  if (value >= 100000) return `₹${(value / 100000).toFixed(1)} L`;
+  return `₹${value.toLocaleString("en-IN")}`;
+}
 
 export default async function ProjectsPage() {
-  let dbProjects: any[] = [];
-  try {
-    dbProjects = await getPublicProjectsAction();
-  } catch {}
+  const projects = await getProjectsAction();
 
   return (
-    <main className="container-shell py-10 pb-16">
-      <PageIntro
-        eyebrow="Projects"
-        title="New projects for buyers who want better timing and better context"
-        description="Track launches, evaluate ready inventory, and compare builder-led opportunities with clearer price bands, possession cues, and brochure-ready detail."
-      />
+    <main className="min-h-screen bg-gray-50">
+      <div className="bg-[#1B4332] py-16 text-white">
+        <div className="mx-auto max-w-7xl px-4">
+          <h1 className="text-4xl font-bold">New Projects & Launches</h1>
+          <p className="mt-4 text-lg text-white/70">Discover upcoming residential and commercial developments in Ahmedabad.</p>
+        </div>
+      </div>
 
-      {/* DB Projects */}
-      {dbProjects.length > 0 && (
-        <div className="mt-8">
-          <h2 className="mb-4 text-lg font-semibold text-slate-950">Featured Projects</h2>
-          <div className="grid gap-6 lg:grid-cols-3">
-            {dbProjects.map((project) => (
-              <div key={project.id} className="rounded-[28px] border border-slate-200 bg-white shadow-sm overflow-hidden">
-                {project.image_url && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={project.image_url}
-                    alt={project.name}
-                    className="h-44 w-full object-cover"
-                  />
+      <div className="mx-auto max-w-7xl px-4 py-12">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {projects.map((p: any) => (
+            <Link
+              key={p.id}
+              href={`/project/${p.slug}`}
+              className="group flex flex-col overflow-hidden rounded-[32px] border border-gray-100 bg-white shadow-sm transition hover:shadow-xl"
+            >
+              <div className="relative aspect-[16/10] overflow-hidden">
+                {p.image_url ? (
+                  <Image src={p.image_url} alt={p.name} fill className="object-cover transition duration-300 group-hover:scale-105" />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-slate-100 text-slate-300">No image</div>
                 )}
-                <div className="p-5 space-y-2">
-                  <div className="font-semibold text-slate-950 text-lg">{project.name}</div>
-                  {project.developer && (
-                    <div className="text-sm text-slate-500">by {project.developer}</div>
-                  )}
-                  <div className="flex items-center gap-1.5 text-sm text-slate-500">
-                    <MapPin className="h-4 w-4 text-amber-500" />
-                    {project.locality ? `${project.locality}, ` : ""}{project.city}
-                  </div>
-                  {project.description && (
-                    <p className="text-sm text-slate-600 line-clamp-2">{project.description}</p>
-                  )}
+                <div className="absolute left-4 top-4">
+                  <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#1B4332] shadow-sm backdrop-blur-sm">
+                    {p.status}
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Mock/demo projects */}
-      <div className="mt-8">
-        {dbProjects.length === 0 && (
-          <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-800">
-            <span className="font-semibold">Showing demo projects</span> — live project listings coming soon.
-          </div>
-        )}
-        <div className="grid gap-6 lg:grid-cols-3">
-          {mockProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+              <div className="flex flex-1 flex-col p-6">
+                <div className="flex-1 space-y-2">
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#1B4332]">{p.name}</h3>
+                  <div className="text-sm font-medium text-gray-500">by {p.developer || "Bespoke Developers"}</div>
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <MapPin className="h-4 w-4 text-red-500" />
+                    {p.locality}, {p.city}
+                  </div>
+                  <div className="pt-2 text-lg font-bold text-[#1B4332]">
+                    Starting {formatInr(p.min_price || 0)}
+                  </div>
+                </div>
+                <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
+                  <div className="flex items-center gap-2 text-xs text-gray-400">
+                    <CalendarClock className="h-4 w-4" />
+                    Status: {p.status}
+                  </div>
+                  <div className="flex items-center gap-1 text-sm font-bold text-[#C9A84C]">
+                    Details <ArrowRight className="h-4 w-4" />
+                  </div>
+                </div>
+              </div>
+            </Link>
           ))}
         </div>
       </div>

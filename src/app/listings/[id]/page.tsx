@@ -10,7 +10,7 @@ type Props = { params: Promise<{ id: string }> };
 
 export default async function ListingDetailPage({ params }: Props) {
   const { id } = await params;
-  const listing = await getListingByIdAction(Number(id));
+  const listing = await getListingByIdAction(id);
   if (!listing) notFound();
 
   const price = Number(listing.price);
