@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand Colors: Deep Emerald (#1B4332) and Metallic Gold (#C9A84C) */
+    --background: 150 10% 98%;
+    --foreground: 153 42% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 153 42% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 153 42% 12%;
+    
+    /* Primary: Deep Emerald */
+    --primary: 153 42% 18%;
+    --primary-foreground: 44 53% 98%;
+    
+    /* Secondary: Metallic Gold */
+    --secondary: 44 53% 54%;
+    --secondary-foreground: 153 42% 12%;
+    
+    --muted: 153 10% 94%;
+    --muted-foreground: 153 20% 40%;
+    --accent: 44 53% 54%;
+    --accent-foreground: 153 42% 12%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 153 10% 90%;
+    --input: 153 10% 90%;
+    --ring: 153 42% 18%;
+    --radius: 1.25rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-headline;
+  }
+}
+
+@layer utilities {
+  .container-shell {
+    @apply mx-auto max-w-7xl px-4;
+  }
+  .btn-brand {
+    @apply bg-[#1B4332] text-white transition hover:bg-[#1B4332]/90 active:scale-[0.98];
+  }
+  .btn-brand-outline {
+    @apply border border-[#1B4332]/30 text-[#1B4332] transition hover:bg-[#1B4332]/5;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
