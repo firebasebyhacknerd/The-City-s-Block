@@ -8,6 +8,7 @@ import {
   POPULAR_LOCALITIES,
   SEARCH_BHK_OPTIONS,
   SEARCH_BUDGET_OPTIONS,
+  SEARCH_RENT_BUDGET_OPTIONS,
   SEARCH_CITIES,
   SEARCH_POSSESSION,
   SEARCH_PROPERTY_TYPES,
@@ -46,6 +47,8 @@ export function HeroSearch() {
     router.push(`/search${qs ? `?${qs}` : ""}`);
   }
 
+  const budgetOptions = listingType === "rent" ? SEARCH_RENT_BUDGET_OPTIONS : SEARCH_BUDGET_OPTIONS;
+
   const filteredLocalities = city
     ? POPULAR_LOCALITIES.filter((loc) => loc.city.toLowerCase() === city.toLowerCase())
     : POPULAR_LOCALITIES;
@@ -63,7 +66,7 @@ export function HeroSearch() {
           <button
             key={chip.value}
             type="button"
-            onClick={() => setListingType(chip.value)}
+            onClick={() => { setListingType(chip.value); setBudget(""); }}
             className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide transition ${
               listingType === chip.value
                 ? "bg-[#C9A84C] text-[#1B4332]"
@@ -141,9 +144,9 @@ export function HeroSearch() {
               </option>
             ))}
           </FilterSelect>
-          <FilterSelect label="Budget" value={budget} onChange={setBudget}>
+          <FilterSelect label="Budget" value={budget} onChange={(v) => { setBudget(v); }}>
             <option value="">Any budget</option>
-            {SEARCH_BUDGET_OPTIONS.map((o) => (
+            {budgetOptions.map((o) => (
               <option key={o.value} value={o.value}>
                 {o.label}
               </option>

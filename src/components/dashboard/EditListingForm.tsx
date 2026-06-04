@@ -23,7 +23,7 @@ const AMENITIES = [
 ];
 
 const PROPERTY_TYPES = ["Apartment", "Builder Floor", "Villa", "Plot", "Office Space", "Retail Shop", "Warehouse"];
-const CITIES = ["Mumbai", "Delhi", "Gurugram", "Noida", "Bengaluru", "Hyderabad", "Pune", "Chennai", "Kolkata", "Ahmedabad"];
+const CITIES = ["Ahmedabad", "Gandhinagar"];
 
 interface EditListingFormProps {
   listing: any;

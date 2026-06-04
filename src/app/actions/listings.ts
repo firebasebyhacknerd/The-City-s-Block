@@ -423,6 +423,7 @@ export async function getHomepageListingsAction(): Promise<{
 export async function getProjectsAction() {
   const rows = await sql`
     SELECT * FROM projects
+    WHERE status = 'published'
     ORDER BY created_at DESC
   `;
   return rows;
@@ -437,11 +438,13 @@ export async function getProjectBySlugAction(slug: string) {
 }
 
 export async function getListingsByLocalityAction(localitySlug: string) {
+  // Convert slug to display name for ILIKE match (e.g. "ashram-road" → "ashram road")
+  const localityPattern = `%${localitySlug.replace(/-/g, " ")}%`;
   const rows = await sql`
     SELECT l.*, u.name as owner_name
     FROM listings l
     JOIN users u ON u.id = l.user_id
-    WHERE l.status = 'active' AND l.locality = ${localitySlug}
+    WHERE l.status = 'active' AND l.locality ILIKE ${localityPattern}
     ORDER BY l.featured DESC, l.created_at DESC
   `;
   return rows;

@@ -22,6 +22,14 @@ export const SEARCH_BUDGET_OPTIONS = [
   { label: "Above ₹5 Cr", value: "50000000-999999999" },
 ] as const;
 
+export const SEARCH_RENT_BUDGET_OPTIONS = [
+  { label: "Under ₹10,000/mo", value: "0-10000" },
+  { label: "₹10k – ₹25k/mo", value: "10000-25000" },
+  { label: "₹25k – ₹50k/mo", value: "25000-50000" },
+  { label: "₹50k – ₹1 Lac/mo", value: "50000-100000" },
+  { label: "Above ₹1 Lac/mo", value: "100000-9999999" },
+] as const;
+
 export const SEARCH_POSSESSION = ["Ready to Move", "Under Construction", "New Launch"] as const;
 
 export const SEARCH_SORT_OPTIONS = [
@@ -86,6 +94,8 @@ export function parseSearchFilters(
   const minPriceNum = minRaw ? Number(minRaw) : undefined;
   const maxPriceNum = maxRaw ? Number(maxRaw) : undefined;
 
+  const postedBy = readSearchParam(sp, "postedBy");
+
   return {
     q,
     city,
@@ -98,6 +108,7 @@ export function parseSearchFilters(
     locality,
     featured: featured || undefined,
     sort,
+    postedBy: postedBy || undefined,
     minPriceNum: minPriceNum && !Number.isNaN(minPriceNum) ? minPriceNum : undefined,
     maxPriceNum: maxPriceNum && !Number.isNaN(maxPriceNum) ? maxPriceNum : undefined,
     bhkNum: parseBhkNumber(bhk),

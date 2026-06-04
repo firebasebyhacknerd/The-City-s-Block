@@ -25,10 +25,16 @@ export default async function ProjectsPage() {
 
       <div className="mx-auto max-w-7xl px-4 py-12">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p: any) => (
+        {projects.length === 0 ? (
+          <div className="col-span-3 rounded-xl border border-dashed border-gray-200 bg-white py-20 text-center">
+            <Building2 className="mx-auto h-10 w-10 text-gray-300" />
+            <p className="mt-4 text-lg font-semibold text-gray-700">No projects available yet</p>
+            <p className="mt-1 text-sm text-gray-400">Check back soon for new launches</p>
+          </div>
+        ) : projects.map((p: any) => (
             <Link
               key={p.id}
-              href={`/project/${p.slug}`}
+              href={p.slug ? `/project/${p.slug}` : "#"}
               className="group flex flex-col overflow-hidden rounded-[32px] border border-gray-100 bg-white shadow-sm transition hover:shadow-xl"
             >
               <div className="relative aspect-[16/10] overflow-hidden">
@@ -47,13 +53,17 @@ export default async function ProjectsPage() {
                 <div className="flex-1 space-y-2">
                   <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#1B4332]">{p.name}</h3>
                   <div className="text-sm font-medium text-gray-500">by {p.developer || "Bespoke Developers"}</div>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <MapPin className="h-4 w-4 text-red-500" />
-                    {p.locality}, {p.city}
-                  </div>
-                  <div className="pt-2 text-lg font-bold text-[#1B4332]">
-                    Starting {formatInr(p.min_price || 0)}
-                  </div>
+                  {(p.locality || p.city) && (
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <MapPin className="h-4 w-4 text-red-500" />
+                      {[p.locality, p.city].filter(Boolean).join(", ")}
+                    </div>
+                  )}
+                  {p.min_price ? (
+                    <div className="pt-2 text-lg font-bold text-[#1B4332]">
+                      Starting {formatInr(p.min_price)}
+                    </div>
+                  ) : null}
                 </div>
                 <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
                   <div className="flex items-center gap-2 text-xs text-gray-400">

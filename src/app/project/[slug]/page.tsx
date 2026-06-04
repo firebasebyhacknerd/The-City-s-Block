@@ -61,7 +61,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
             <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
               <div className="text-sm text-slate-500">Location</div>
               <div className="mt-1 text-xl font-semibold text-slate-950">
-                {project.locality}, {project.city}
+                {[project.locality, project.city].filter(Boolean).join(", ")}
               </div>
             </div>
             <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
@@ -75,7 +75,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
             <div className="grid gap-4 text-sm leading-7 text-slate-600">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-amber-500" />
-                Prime location in {project.locality}
+                Prime location in {project.locality || project.city}
               </div>
               <div className="flex items-center gap-2">
                 <Building2 className="h-4 w-4 text-amber-500" />
@@ -95,9 +95,13 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
             <div className="mt-2 text-sm leading-6 text-slate-600">
               Review floor plans, pricing guidance, and launch details before you book a site visit or speak to sales.
             </div>
-            <Button className="mt-5 w-full rounded-full bg-slate-950 text-white hover:bg-slate-800">
+            <Button
+              className="mt-5 w-full rounded-full bg-slate-950 text-white hover:bg-slate-800"
+              disabled
+              title="Brochure not available yet"
+            >
               <Download className="h-4 w-4 mr-2" />
-              Download Project Brochure
+              Brochure Coming Soon
             </Button>
           </div>
           
