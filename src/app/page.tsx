@@ -25,7 +25,7 @@ function dbToListing(l: DbListing): HomepageListing {
     id: String(l.id),
     title: l.title,
     city: l.city,
-    locality: l.locality,
+    locality: l.locality ?? "",
     price: Number(l.price),
     priceUnit: l.price_unit,
     area: l.area,
