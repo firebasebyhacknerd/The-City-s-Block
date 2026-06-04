@@ -36,12 +36,7 @@ const primaryNav = [
   { href: "/projects", label: "New Projects", icon: Building2 },
 ];
 
-const secondaryTabs = [
-  { href: "/search?listing_type=rent", label: "Rentals" },
-  { href: "/projects", label: "New Projects" },
-  { href: "/commercial", label: "Commercial" },
-  { href: "/search", label: "All Listings" },
-];
+
 
 export function NavbarClient({ session }: NavbarClientProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -164,19 +159,7 @@ export function NavbarClient({ session }: NavbarClientProps) {
         </button>
       </div>
 
-      <div className="hidden border-t border-gray-100 lg:block">
-        <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-1.5">
-          {secondaryTabs.map((tab) => (
-            <Link
-              key={tab.label}
-              href={tab.href}
-              className="text-xs font-medium text-gray-500 transition hover:text-[#1B4332]"
-            >
-              {tab.label}
-            </Link>
-          ))}
-        </div>
-      </div>
+
 
       {mobileOpen && (
         <div className="border-t border-gray-100 bg-white px-4 py-4 lg:hidden">
