@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createProjectAction, updateProjectAction } from "@/app/actions/admin";
 
-const CITIES = ["Mumbai", "Delhi", "Gurugram", "Noida", "Bengaluru", "Hyderabad", "Pune", "Chennai", "Kolkata", "Ahmedabad"];
+const CITIES = ["Ahmedabad", "Gandhinagar"];
 
 interface ProjectFormProps {
   project?: {

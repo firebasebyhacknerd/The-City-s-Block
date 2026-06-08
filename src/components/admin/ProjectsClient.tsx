@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Pencil, Trash2, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProjectForm } from "@/components/admin/ProjectForm";
@@ -21,7 +22,8 @@ interface ProjectsClientProps {
   projects: any[];
 }
 
-export function ProjectsClient({ projects: initialProjects }: ProjectsClientProps) {
+export function ProjectsClient({ projects }: ProjectsClientProps) {
+  const router = useRouter();
   const [showCreate, setShowCreate] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -29,7 +31,18 @@ export function ProjectsClient({ projects: initialProjects }: ProjectsClientProp
   const handleDelete = (id: number) => {
     startTransition(async () => {
       await deleteProjectAction(id);
+      router.refresh();
     });
+  };
+
+  const handleCreateSuccess = () => {
+    setShowCreate(false);
+    router.refresh();
+  };
+
+  const handleEditSuccess = () => {
+    setEditingId(null);
+    router.refresh();
   };
 
   return (
@@ -43,7 +56,7 @@ export function ProjectsClient({ projects: initialProjects }: ProjectsClientProp
               <X className="h-4 w-4" />
             </Button>
           </div>
-          <ProjectForm onSuccess={() => setShowCreate(false)} onCancel={() => setShowCreate(false)} />
+          <ProjectForm onSuccess={handleCreateSuccess} onCancel={() => setShowCreate(false)} />
         </div>
       ) : (
         <Button
@@ -55,13 +68,13 @@ export function ProjectsClient({ projects: initialProjects }: ProjectsClientProp
       )}
 
       {/* Project list */}
-      {initialProjects.length === 0 ? (
+      {projects.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-200 bg-white py-20 text-center text-gray-400">
           No projects yet. Create your first project above.
         </div>
       ) : (
         <div className="space-y-4">
-          {initialProjects.map((project) => (
+          {projects.map((project) => (
             <div key={project.id} className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm">
               {editingId === project.id ? (
                 <>
@@ -73,7 +86,7 @@ export function ProjectsClient({ projects: initialProjects }: ProjectsClientProp
                   </div>
                   <ProjectForm
                     project={project}
-                    onSuccess={() => setEditingId(null)}
+                    onSuccess={handleEditSuccess}
                     onCancel={() => setEditingId(null)}
                   />
                 </>

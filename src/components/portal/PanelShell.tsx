@@ -8,13 +8,12 @@ import {
 // ─── Role-based nav configs ───────────────────────────────────────────────────
 
 const SELLER_NAV = [
-  { label: "Overview",       href: "/dashboard" },
-  { label: "Listings",       href: "/dashboard/listings" },
-  { label: "New Listing",    href: "/dashboard/new-listing" },
-  { label: "Pipeline",       href: "/dashboard/pipeline" },
-  { label: "Buyer Inquiries", href: "/dashboard/leads" },
-  { label: "Saved Searches", href: "/dashboard/saved-searches" },
-  { label: "Profile",        href: "/dashboard/profile" },
+  { label: "Overview",        href: "/dashboard" },
+  { label: "My Listings",     href: "/dashboard/listings" },
+  { label: "Post Listing",    href: "/dashboard/new-listing" },
+  { label: "Pipeline",        href: "/dashboard/pipeline" },
+  { label: "Saved Searches",  href: "/dashboard/saved-searches" },
+  { label: "Profile",         href: "/dashboard/profile" },
 ];
 
 const BUYER_NAV = [

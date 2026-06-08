@@ -9,7 +9,7 @@ import { NotificationBell } from "@/components/shared/NotificationBell";
 import { Button } from "@/components/ui/button";
 import {
   LogOut, ListChecks, Users, MessageSquare,
-  Building2, Clock, CheckCircle2
+  Building2, Clock, CheckCircle2, FolderKanban, MapPin, Globe
 } from "lucide-react";
 
 export const metadata = { title: "Admin Console | The City's Blocks" };
@@ -125,6 +125,31 @@ export default async function AdminPage() {
             </div>
           </div>
         </Link>
+
+        <Link href="/admin/projects" className="group rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition hover:border-[#1B4332]/30 hover:shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="rounded-lg bg-emerald-50 p-2.5">
+              <FolderKanban className="h-5 w-5 text-emerald-600" />
+            </div>
+            <div>
+              <div className="font-semibold text-gray-900">Projects</div>
+              <div className="text-xs text-gray-500">Manage new project launches</div>
+            </div>
+          </div>
+        </Link>
+
+        <Link href="/admin/localities" className="group rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition hover:border-[#1B4332]/30 hover:shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="rounded-lg bg-rose-50 p-2.5">
+              <MapPin className="h-5 w-5 text-rose-600" />
+            </div>
+            <div>
+              <div className="font-semibold text-gray-900">Localities</div>
+              <div className="text-xs text-gray-500">Listing coverage by city</div>
+            </div>
+          </div>
+        </Link>
+
       </div>
 
       {/* Pending alert */}

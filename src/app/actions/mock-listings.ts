@@ -51,7 +51,7 @@ export async function saveMockListingAction(data: {
           city, locality, address, price, price_unit, area, bhk, bathrooms,
           furnishing, possession, images, status, featured, verified
         ) VALUES (
-          1,
+          ${session.id},
           ${data.title},
           ${data.description},
           ${data.listingType},
@@ -110,7 +110,7 @@ export async function saveMockListingAction(data: {
             city, locality, address, price, price_unit, area, bhk, bathrooms,
             furnishing, possession, images, status, featured, verified
           ) VALUES (
-            1,
+            ${session.id},
             ${data.title},
             ${data.description},
             ${data.listingType},

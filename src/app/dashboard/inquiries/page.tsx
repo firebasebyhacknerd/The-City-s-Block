@@ -40,10 +40,18 @@ export default async function BuyerInquiriesPage() {
                     <div className="mt-2 text-sm text-slate-600 bg-slate-50 rounded-xl p-3">
                       {inq.message || "No message."}
                     </div>
-                    <div className="text-xs text-slate-400 mt-2">
-                      {new Date(inq.created_at).toLocaleDateString("en-IN", {
+                    <div className="text-xs text-slate-400 mt-2 flex items-center gap-2">
+                      <span>{new Date(inq.created_at).toLocaleDateString("en-IN", {
                         day: "numeric", month: "short", year: "numeric"
-                      })}
+                      })}</span>
+                      {inq.listing_id && (
+                        <>
+                          <span>·</span>
+                          <Link href={`/listings/${inq.listing_id}`} className="text-[#1B4332] hover:underline">
+                            View listing →
+                          </Link>
+                        </>
+                      )}
                     </div>
                   </div>
                   <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium self-start ${

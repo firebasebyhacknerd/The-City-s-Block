@@ -112,6 +112,37 @@ export default async function SearchPage({ searchParams }: Props) {
     <main className="min-h-screen bg-gray-50 pb-24 md:pb-6">
       <div className="border-b border-gray-200 bg-white px-4 py-4">
         <div className="mx-auto max-w-7xl">
+          {/* Buy / Rent tabs */}
+          <div className="mb-3 flex gap-2">
+            {[
+              { label: "All", value: "" },
+              { label: "Buy", value: "sale" },
+              { label: "Rent", value: "rent" },
+            ].map((tab) => {
+              const isActive = (parsed.listing_type || "") === tab.value;
+              const tabQs = buildSearchQueryString({
+                ...filtersForChips,
+                listing_type: tab.value || undefined,
+              });
+              return (
+                <Link
+                  key={tab.value}
+                  href={`/search${tabQs ? `?${tabQs}` : ""}`}
+                  className={`rounded-full px-5 py-2 text-sm font-bold transition ${
+                    isActive
+                      ? tab.value === "rent"
+                        ? "bg-green-600 text-white"
+                        : tab.value === "sale"
+                        ? "bg-[#1B4332] text-white"
+                        : "bg-gray-900 text-white"
+                      : "border border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  {tab.label}
+                </Link>
+              );
+            })}
+          </div>
           <form action="/search" method="get" className="flex flex-wrap items-center gap-2">
             <div className="flex min-w-[200px] flex-1 items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
               <Search className="h-4 w-4 shrink-0 text-gray-400" />
@@ -137,7 +168,7 @@ export default async function SearchPage({ searchParams }: Props) {
                 href="/search"
                 className="min-h-[44px] rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 flex items-center"
               >
-                Clear
+                Clear all
               </Link>
             )}
             {session && hasFilters && <SaveSearchButton filters={activeFilters} />}
@@ -161,9 +192,7 @@ export default async function SearchPage({ searchParams }: Props) {
                 <select name="city" defaultValue={parsed.city} className={SELECT_CLS}>
                   <option value="">All Cities</option>
                   {SEARCH_CITIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
+                    <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
               </FilterGroup>
@@ -171,7 +200,7 @@ export default async function SearchPage({ searchParams }: Props) {
               <FilterGroup label="Listing Type">
                 <select name="listing_type" defaultValue={parsed.listing_type} className={SELECT_CLS}>
                   <option value="">Buy or Rent</option>
-                  <option value="sale">For Sale</option>
+                  <option value="sale">For Sale (Buy)</option>
                   <option value="rent">For Rent</option>
                 </select>
               </FilterGroup>
@@ -180,9 +209,7 @@ export default async function SearchPage({ searchParams }: Props) {
                 <select name="property_type" defaultValue={parsed.property_type} className={SELECT_CLS}>
                   <option value="">All Types</option>
                   {SEARCH_PROPERTY_TYPES.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
+                    <option key={t} value={t}>{t}</option>
                   ))}
                 </select>
               </FilterGroup>
@@ -191,9 +218,7 @@ export default async function SearchPage({ searchParams }: Props) {
                 <select name="bhk" defaultValue={parsed.bhk} className={SELECT_CLS}>
                   <option value="">Any</option>
                   {SEARCH_BHK_OPTIONS.map((b) => (
-                    <option key={b} value={b}>
-                      {b}
-                    </option>
+                    <option key={b} value={b}>{b}</option>
                   ))}
                 </select>
               </FilterGroup>
@@ -202,9 +227,7 @@ export default async function SearchPage({ searchParams }: Props) {
                 <select name="furnishing" defaultValue={parsed.furnishing} className={SELECT_CLS}>
                   <option value="">Any</option>
                   {FURNISHING.map((f) => (
-                    <option key={f} value={f}>
-                      {f}
-                    </option>
+                    <option key={f} value={f}>{f}</option>
                   ))}
                 </select>
               </FilterGroup>
@@ -213,9 +236,7 @@ export default async function SearchPage({ searchParams }: Props) {
                 <select name="possession" defaultValue={parsed.possession} className={SELECT_CLS}>
                   <option value="">Any</option>
                   {SEARCH_POSSESSION.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
+                    <option key={p} value={p}>{p}</option>
                   ))}
                 </select>
               </FilterGroup>
@@ -225,7 +246,7 @@ export default async function SearchPage({ searchParams }: Props) {
                   type="number"
                   name="minPrice"
                   defaultValue={parsed.minPriceNum ?? ""}
-                  placeholder="e.g. 2500000"
+                  placeholder={parsed.listing_type === "rent" ? "e.g. 10000" : "e.g. 2500000"}
                   className={INPUT_CLS}
                 />
               </FilterGroup>
@@ -235,7 +256,7 @@ export default async function SearchPage({ searchParams }: Props) {
                   type="number"
                   name="maxPrice"
                   defaultValue={parsed.maxPriceNum ?? ""}
-                  placeholder="e.g. 20000000"
+                  placeholder={parsed.listing_type === "rent" ? "e.g. 50000" : "e.g. 20000000"}
                   className={INPUT_CLS}
                 />
               </FilterGroup>

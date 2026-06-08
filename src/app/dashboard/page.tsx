@@ -109,7 +109,7 @@ export default async function DashboardPage() {
                   <Link href="/dashboard/pipeline"><BarChart2 className="h-4 w-4" /> Pipeline</Link>
                 </Button>
                 <Button asChild variant="outline" className="rounded-full gap-2">
-                  <Link href="/dashboard/leads"><MessageSquare className="h-4 w-4" /> {leadsLabel}</Link>
+                  <Link href="/dashboard/pipeline"><MessageSquare className="h-4 w-4" /> Buyer Inquiries</Link>
                 </Button>
               </div>
 
